@@ -1,0 +1,43 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "subject": "Diwali",
+      "fromDate": "Tue Sep 05 2023 12:13:54 GMT+0530",
+      "toDate": "Tue Sep 05 2023 12:13:54 GMT+0530",
+      "days": "2",
+      "zoneName": "Gujarat",
+      "district": "Navsari",
+      "centreName": "Snehkunj",
+      "noOfPeople": "120",
+      "createdOn": "Tue Sep 05 2023 12:14:40 GMT+0530",
+      "updatedOn": "Tue Sep 05 2023 12:14:40 GMT+0530"
+    },
+    {
+      "id": 2,
+      "subject": "Holi",
+      "fromDate": "Tue Sep 02 2023 12:13:54 GMT+0530",
+      "toDate": "Tue Sep 02 2023 12:13:54 GMT+0530",
+      "days": "2",
+      "zoneName": "Gujarat",
+      "district": "Navsari",
+      "centreName": "Snehkunj",
+      "noOfPeople": "120",
+      "createdOn": "Tue Sep 02 2023 12:14:40 GMT+0530",
+      "updatedOn": "Tue Sep 02 2023 12:14:40 GMT+0530"
+    },
+    {
+      "id": 3,
+      "subject": "Dashera",
+      "fromDate": "Tue Sep 03 2023 12:13:54 GMT+0530",
+      "toDate": "Tue Sep 03 2023 12:13:54 GMT+0530",
+      "days": "2",
+      "zoneName": "Gujarat",
+      "district": "Navsari",
+      "centreName": "Snehkunj",
+      "noOfPeople": "120",
+      "createdOn": "Tue Sep 03 2023 12:14:40 GMT+0530",
+      "updatedOn": "Tue Sep 03 2023 12:14:40 GMT+0530"
+    }
+  ]
+}

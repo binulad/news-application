@@ -1,0 +1,97 @@
+<div class="card rounded-0">
+  <div class="card-body">
+    {{ newsDetails | json }}
+
+    <div class="hstack gap-3 mb-3">
+      <h3 class="mb-0">{{ newsDetails.subject }}</h3>
+
+      <p class="text-muted mb-0 ms-auto">
+        Created On: {{ newsDetails.createdOn | date : "dd-MM-yyyy" }}
+      </p>
+      <div class="vr"></div>
+      <p class="text-muted mb-0">
+        Updated On: {{ newsDetails.updatedOn | date : "dd-MM-yyyy" }}
+      </p>
+    </div>
+    <p class="text-muted">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. In accusantium
+      totam ipsam similique debitis magnam non, natus minus illo blanditiis
+      quidem dolorem vitae iste itaque, voluptatibus repellendus! Numquam,
+      laborum quia.
+    </p>
+
+    <!-- Programme -->
+    <p class="mb-2">Programme Details:</p>
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap justify-content-between">
+          <p class="m-0">
+            From Date:
+            <span class="text-muted">{{
+              newsDetails.fromDate | date : "dd-MM-yyyy"
+            }}</span>
+          </p>
+          <p class="m-0">
+            To Date:
+            <span class="text-muted">{{
+              newsDetails.toDate | date : "dd-MM-yyyy"
+            }}</span>
+          </p>
+          <p class="m-0">
+            Day(s): <span class="text-muted">{{ newsDetails.days }}</span>
+          </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap justify-content-between mt-2">
+          <p class="m-0">
+            Number of people:
+            <span class="text-muted">{{ newsDetails.noOfPeople }}</span>
+          </p>
+          <p class="mb-0">
+            Department(s)/Related Wing(s):
+            <span class="text-muted">Department1, Department1</span>
+          </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap justify-content-between mt-2">
+          <p class="m-0">
+            Programme Anchor Name:
+            <span class="text-muted">Test</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Programme -->
+
+    <!-- Centre Details -->
+    <p class="mb-2">Centre Details:</p>
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap justify-content-between">
+          <p class="m-0">
+            Centre Name:
+            <span class="text-muted">{{ newsDetails.centreName }}</span>
+          </p>
+          <p class="m-0">
+            Centre Incharge Name:
+            <span class="text-muted">-</span>
+          </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap justify-content-between mt-2">
+          <p class="m-0">
+            Zone Name:
+            <span class="text-muted">{{ newsDetails.zoneName }}</span>
+          </p>
+          <p class="m-0">
+            District:
+            <span class="text-muted">{{ newsDetails.district }}</span>
+          </p>
+          <p class="m-0">
+            City/Area Name:
+            <span class="text-muted">-</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- End: Centre Details -->
+  </div>
+</div>
