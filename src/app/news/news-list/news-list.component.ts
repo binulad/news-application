@@ -13,7 +13,6 @@ export class NewsListComponent implements OnInit {
   constructor(private newsService: NewsService) {}
 
   ngOnInit(): void {
-    this.newsService.isAddEditView.next(false);
     this.newsService.getAllNews().subscribe((response) => {
       this.newsList = response;
     });

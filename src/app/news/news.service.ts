@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { News } from './news.model';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 const API_URL = 'http://localhost:3000/news';
 
@@ -9,8 +8,6 @@ const API_URL = 'http://localhost:3000/news';
   providedIn: 'root',
 })
 export class NewsService {
-  isAddEditView = new BehaviorSubject<boolean>(false);
-
   constructor(private http: HttpClient) {}
 
   /**

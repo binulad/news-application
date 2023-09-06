@@ -18,8 +18,6 @@ export class NewsDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.newsService.isAddEditView.next(true);
-
     this.route.params.subscribe((params: Params) => {
       this.id = +params['id'];
 

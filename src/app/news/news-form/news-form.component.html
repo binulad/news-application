@@ -1,1 +1,418 @@
-<p>news-form works!</p>
+<form class="card" [formGroup]="newsDetails">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex align-items-center">News Details</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-lg-7">
+                <div class="row g-3">
+                  <!-- News Subject -->
+                  <div class="col-12">
+                    <label for="subject" class="form-label"
+                      >Subject<small class="text-danger">*</small>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="subject"
+                      placeholder="Enter the subject"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <!-- End: News Subject -->
+
+                  <!-- Dates and Day -->
+                  <div class="col-md-4 col-sm-6">
+                    <label for="fromDate" class="form-label"
+                      >From Date<small class="text-danger">*</small></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fromDate"
+                      placeholder="Enter the date"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <div class="col-md-4 col-sm-6">
+                    <label for="toDate" class="form-label"
+                      >To Date<small class="text-danger">*</small></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="toDate"
+                      placeholder="Enter the date"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <div class="col-md-4 col-sm-6">
+                    <label for="days" class="form-label"
+                      >Day(s)<small class="text-danger">*</small></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="days"
+                      placeholder="Enter the day(s)"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <!-- End: Dates and Day -->
+
+                  <!-- No. of people and Anchor Name and Related Wing(s) -->
+                  <div class="col-sm-6">
+                    <label for="noOfPeople" class="form-label"
+                      >No. Of People<small class="text-danger">*</small></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="noOfPeople"
+                      placeholder="Enter the number of people"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="anchorName" class="form-label"
+                      >Anchor Name<small class="text-danger">*</small></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="anchorName"
+                      placeholder="Enter the anchor name"
+                    />
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <div class="col-12">
+                    <label for="departmentOrWing" class="form-label"
+                      >Department(s)/Related Wing(s)<small class="text-danger"
+                        >*</small
+                      ></label
+                    >
+                    <select
+                      class="form-select"
+                      aria-label="Department(s)/Related Wing(s)"
+                    >
+                      <option selected>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                    <div class="invalid-feedback">This field is required</div>
+                  </div>
+                  <!-- End: No. of people and Anchor Name and Related Wing(s) -->
+                </div>
+              </div>
+
+              <!-- News Details -->
+              <div class="col-lg-5">
+                <div class="row h-100">
+                  <div class="col-12 d-flex flex-column flex-grow-1">
+                    <label
+                      for="newsDescription"
+                      class="form-label flex-shrink-0"
+                      >Description<small class="text-danger">*</small></label
+                    >
+                    <textarea
+                      name="newsDescription"
+                      id="newsDescription"
+                      class="form-control flex-grow-1"
+                      rows="10"
+                      placeholder="Enter the news description"
+                    ></textarea>
+                    <div class="invalid-feedback flex-shrink-0">
+                      This field is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End: News Details -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guest Details -->
+      <div class="col-12 mt-3">
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            Guest Details
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary d-flex align-items-center ms-auto"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-plus-lg me-1"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                />
+              </svg>
+              Add New Guest
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-lg-3 col-sm-6">
+                <label for="name" class="form-label"
+                  >Guest Name<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Enter the guest name"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-lg-3 col-sm-6">
+                <label for="identification" class="form-label"
+                  >Guest Identification<small class="text-danger"
+                    >*</small
+                  ></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="identification"
+                  placeholder="Enter the guest identification"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-lg-6">
+                <label for="newsDescription" class="form-label"
+                  >Speech Description</label
+                >
+                <textarea
+                  name="newsDescription"
+                  id="newsDescription"
+                  class="form-control flex-grow-1"
+                  rows="1"
+                  placeholder="Enter guest's speech description"
+                ></textarea>
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End: Guest Details -->
+
+      <!-- Centre Details -->
+      <div class="col-12 mt-3">
+        <div class="card">
+          <div class="card-header d-flex align-items-center">
+            Centre Details
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="centreName" class="form-label"
+                  >Centre Name<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="centreName"
+                  placeholder="Enter the centre name"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="centreIncharge" class="form-label"
+                  >Centre Incharge<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="centreIncharge"
+                  placeholder="Enter the centre incharge name"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-md-4 col-sm-6">
+                <label for="zoneName" class="form-label"
+                  >Zone Name<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="zoneName"
+                  placeholder="Enter the zone name"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-md-4 col-sm-6">
+                <label for="district" class="form-label"
+                  >District<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="district"
+                  placeholder="Enter the district"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+              <div class="col-md-4 col-sm-6">
+                <label for="areaName" class="form-label"
+                  >City/Area Name<small class="text-danger">*</small></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="areaName"
+                  placeholder="Enter the city/area name"
+                />
+                <div class="invalid-feedback">This field is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End: Centre Details -->
+
+      <!-- Attachments -->
+      <div class="col-12 mt-3">
+        <div class="card">
+          <div class="card-header d-flex align-items-center">Attachments</div>
+          <div class="card-body">
+            <input
+              class="form-control"
+              type="file"
+              id="formFileMultiple"
+              multiple
+            />
+
+            <ul class="list-unstyled mt-3 mb-0 row">
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="col-lg-2 col-md-3 col-sm-4">
+                <figure class="figure">
+                  <img
+                    src="..."
+                    class="figure-img img-fluid rounded"
+                    alt="..."
+                  />
+                  <figcaption class="figure-caption">
+                    A caption for the above image.
+                  </figcaption>
+                </figure>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- End: Attachments -->
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between">
+      <!-- Back button -->
+      <a
+        class="btn btn-secondary d-flex align-items-center"
+        [routerLink]="['/news']"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-arrow-left me-2"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+        Back
+      </a>
+      <!-- Back button -->
+
+      <!-- Save Button -->
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <!-- End: Save Button -->
+    </div>
+  </div>
+</form>

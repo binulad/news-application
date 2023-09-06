@@ -1,15 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NewsService } from '../news.service';
+import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-news-form',
   templateUrl: './news-form.component.html',
   styleUrls: ['./news-form.component.scss'],
 })
-export class NewsFormComponent implements OnInit {
-  constructor(private newsService: NewsService) {}
-
-  ngOnInit(): void {
-    this.newsService.isAddEditView.next(true);
-  }
+export class NewsFormComponent {
+  newsDetails!: FormGroup;
 }
