@@ -6,6 +6,13 @@ import { NewsListComponent } from './news-list/news-list.component';
 import { NewsFormComponent } from './news-form/news-form.component';
 import { NewsDetailsComponent } from './news-details/news-details.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NewsFormContainerComponent } from './news-form-container/news-form-container.component';
+import { NewsFormPresentationComponent } from './news-form-container/news-form-presentation/news-form-presentation.component';
+import { NewsListContainerComponent } from './news-list-container/news-list-container.component';
+import { NewsListPresentationComponent } from './news-list-container/news-list-presentation/news-list-presentation.component';
+import { NewsDetailContainerComponent } from './news-detail-container/news-detail-container.component';
+import { NewsDetailPresentationComponent } from './news-detail-container/news-detail-presentation/news-detail-presentation.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +20,18 @@ import { ReactiveFormsModule } from '@angular/forms';
     NewsListComponent,
     NewsFormComponent,
     NewsDetailsComponent,
+    NewsFormContainerComponent,
+    NewsFormPresentationComponent,
+    NewsListContainerComponent,
+    NewsListPresentationComponent,
+    NewsDetailContainerComponent,
+    NewsDetailPresentationComponent,
   ],
-  imports: [CommonModule, NewsRoutingModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    NewsRoutingModule,
+    ReactiveFormsModule,
+    BsDatepickerModule.forRoot(),
+  ],
 })
 export class NewsModule {}

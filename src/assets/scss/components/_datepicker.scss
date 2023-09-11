@@ -1,0 +1,19 @@
+// Override Variables
+$theme-default: $primary;
+$hover-theme-default: darken($primary, 5%);
+$active-theme-default: darken($primary, 10%);
+
+$theme-list: map-merge($theme-list, ('default': $theme-default));
+
+// Custom Style
+.bs-datepicker {
+  &-container {
+    padding: 0;
+  }
+}
+
+/* theming */
+@each $name,
+$color in $theme-list {
+  @include theming($name, $color);
+}
