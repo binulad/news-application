@@ -41,10 +41,18 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This method used for update the News data
+   * @param newsData Passed the updated news data
+   */
   updateNews(newsData: FormGroup) {
     this.newsService.updateNews(newsData, this.id).subscribe();
   }
 
+  /**
+   * This method used for add new news
+   * @param newsData Passed the news data
+   */
   addNews(newsData: FormGroup) {
     this.newsService.addNews(newsData).subscribe();
   }

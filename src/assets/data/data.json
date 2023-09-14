@@ -1,53 +1,58 @@
 {
   "news": [
     {
-      "subject": "जन्माष्टमी",
-      "fromDate": "2023-09-05T13:50:39.000Z",
-      "toDate": "2023-09-06T13:50:39.000Z",
-      "days": 1,
+      "subject": "Test News ",
+      "fromDate": "2023-09-01T05:02:17.000Z",
+      "toDate": "2023-09-06T05:02:17.000Z",
+      "days": 10,
       "noOfPeople": 100,
-      "anchorName": "गीता बहन",
-      "departmentOrWing": "10",
-      "newsDescription": "जन्माष्टमी पर्व को भगवान श्री कृष्ण के जन्मदिन के रूप में मनाया जाता है। यह पर्व पूरी दुनिया में पूर्ण आस्था एवं श्रद्धा के साथ मनाया जाता है। जन्माष्टमी को भारत में ही नहीं, बल्कि विदेशों में बसे भारतीय भी पूरी आस्था व उल्लास से मनाते हैं। श्री कृष्ण युगों-युगों से हमारी आस्था के केंद्र रहे हैं। वे कभी यशोदा मैया के लाल होते हैं, तो कभी ब्रज के नटखट कान्हा।",
+      "anchorName": "Lorem Ipsumdvs",
+      "departmentOrWing": "14",
+      "newsDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
       "guestDetails": [
         {
-          "guestName": "कृष्णा",
-          "identification": "मजराजा ",
-          "speechDescription": "जब जब धरती पर पाप और अधर्म हद से ज्यादा बढ़ा है, भगवान ने धरती पर अवतार लिया है। भगवान विष्णु किसी न किसी उद्देश्य की पूर्ति के लिए धरती पर अवतरित हुए। विष्णु जी का एक अवतार श्रीकृष्ण थे। मथुरा की राजकुमारी देवकी और वासुदेव की आठवीं संतान के रूप में जन्में कान्हा का बचपन गोकुल में माता यशोदा की गोद में बीता। राजा कंस से बचाने के लिए वासुदेव ने कान्हा के जन्म के बाद ही उन्हें अपने चचेरे भाई नंदबाबा और यशोदा को दे दिया था। श्रीकृष्ण ने अपने जन्म से लेकर जीवन के हर पड़ाव पर चमत्कार दिखाए। श्रीकृष्ण के जीवन से जुड़े कई किस्से हैं, जो मानव समाज को सीख देते हैं।"
+          "guestName": "Lorem Ipsum",
+          "identification": "Lorem Ipsum",
+          "speechDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+        },
+        {
+          "guestName": "Aldus PageMaker",
+          "identification": "Lorem Ipsum",
+          "speechDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
         }
       ],
       "centerDetails": {
-        "centreName": "स्नेहकुंज ",
-        "centreIncharge": "गीता बहन",
-        "zoneName": "गुजरात ",
-        "district": "नवसारी",
-        "areaName": "नवसारी"
+        "centreName": "Lorem Ipsum",
+        "centreIncharge": "Lorem Ipsum",
+        "zoneName": "Lorem Ipsum",
+        "district": "Lorem Ipsum",
+        "areaName": "Lorem Ipsum"
       },
       "files": [],
-      "createdOn": "2023-09-11T13:57:08.792Z",
-      "updatedOn": null,
+      "createdOn": "2023-09-12T05:15:06.406Z",
+      "updatedOn": "2023-09-12T05:56:22.125Z",
       "id": 1
     },
     {
-      "subject": "जन्माष्टमी12",
-      "fromDate": "2023-09-07T14:15:55.000Z",
-      "toDate": "2023-09-07T14:15:55.000Z",
-      "days": 1,
-      "noOfPeople": 150,
-      "anchorName": "जन्माष्टमी",
-      "departmentOrWing": "17",
-      "newsDescription": "भगवान श्री कृष्ण के जन्मोत्सव का दिन बड़ी धूमधाम से मनाया जाता है। जन्माष्टमी पर्व भगवान श्री कृष्ण के जन्मदिन के रूप में मनाया जाता है, जो रक्षाबंधन के बाद भाद्रपद माह के कृष्ण पक्ष की अष्टमी तिथि को मनाया जाता है।",
+      "subject": "safasfa",
+      "fromDate": "2023-09-01T05:54:51.000Z",
+      "toDate": "2023-09-06T05:54:51.000Z",
+      "days": 23,
+      "noOfPeople": 23,
+      "anchorName": "sdads",
+      "departmentOrWing": "13",
+      "newsDescription": "fsasfas",
       "guestDetails": [],
       "centerDetails": {
-        "centreName": "जन्माष्टमी",
-        "centreIncharge": "जन्माष्टमी",
-        "zoneName": "जन्माष्टमी",
-        "district": "जन्माष्टमी",
-        "areaName": "जन्माष्टमी"
+        "centreName": "saf",
+        "centreIncharge": "sf",
+        "zoneName": "af",
+        "district": "sf",
+        "areaName": "f"
       },
       "files": [],
-      "createdOn": "2023-09-11T14:17:20.772Z",
-      "updatedOn": "2023-09-11T14:23:36.630Z",
+      "createdOn": "2023-09-12T05:55:10.203Z",
+      "updatedOn": null,
       "id": 2
     }
   ]

@@ -8,7 +8,6 @@ import { NewsService } from '../../news.service';
 @Component({
   selector: 'app-news-form-presentation',
   templateUrl: './news-form-presentation.component.html',
-  styleUrls: ['./news-form-presentation.component.scss'],
 })
 export class NewsFormPresentationComponent implements OnInit {
   newsForm!: FormGroup;

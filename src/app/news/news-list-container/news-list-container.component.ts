@@ -8,7 +8,10 @@ import { Subscription } from 'rxjs';
 })
 export class NewsListContainerComponent implements OnInit, OnDestroy {
   deletedNewsSub!: Subscription;
-  constructor(private newsService: NewsService) {}
+  abc?: string;
+  constructor(private newsService: NewsService) {
+    // this.abc = '';
+  }
 
   ngOnInit(): void {
     this.getAllNews();

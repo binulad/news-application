@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
-import { NewsListComponent } from './news-list/news-list.component';
-import { NewsFormComponent } from './news-form/news-form.component';
-import { NewsDetailsComponent } from './news-details/news-details.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NewsFormContainerComponent } from './news-form-container/news-form-container.component';
@@ -17,9 +14,6 @@ import { NewsDetailPresentationComponent } from './news-detail-container/news-de
 @NgModule({
   declarations: [
     NewsComponent,
-    NewsListComponent,
-    NewsFormComponent,
-    NewsDetailsComponent,
     NewsFormContainerComponent,
     NewsFormPresentationComponent,
     NewsListContainerComponent,
