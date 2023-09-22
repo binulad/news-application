@@ -1,27 +1,39 @@
 <nav class="navbar navbar-expand bg-primary bg-opacity-10">
   <div class="container-xxxl">
-    <a class="navbar-brand" href="#">News App</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-0 mb-lg-0">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            aria-current="page"
-            routerLink="/home"
-            routerLinkActive="active"
-            >Home</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            aria-current="page"
-            routerLink="/news"
-            routerLinkActive="active"
-            >News</a
-          >
-        </li>
-      </ul>
+    <div class="d-flex align-items-center justify-content-between flex-grow-1">
+      <a class="navbar-brand" href="#">Daily News</a>
+
+      <div
+        class="collapse navbar-collapse flex-grow-0"
+        id="navbarSupportedContent"
+      >
+        <ul class="navbar-nav me-auto mb-0 mb-lg-0">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              aria-current="page"
+              routerLink="/home"
+              routerLinkActive="active"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              aria-current="page"
+              routerLink="/news"
+              routerLinkActive="active"
+              >News</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Search Block -->
+      <div class="search__block w-25">
+        <input class="form-control" type="text" placeholder="Search" />
+      </div>
+      <!-- End: Search Block -->
     </div>
   </div>
 </nav>

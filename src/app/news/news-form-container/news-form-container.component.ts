@@ -32,6 +32,7 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
     }
 
     this.submitNewsSub = this.newsService.submitNews.subscribe((newsData) => {
+      console.log('newsData:: ', newsData);
       if (this.isEdit) {
         this.updateNews(newsData);
       } else {
@@ -46,6 +47,8 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
    * @param newsData Passed the updated news data
    */
   updateNews(newsData: FormGroup) {
+    console.log('newsData', newsData);
+
     this.newsService.updateNews(newsData, this.id).subscribe();
   }
 

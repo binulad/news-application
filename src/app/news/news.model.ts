@@ -47,6 +47,7 @@ export interface ChiefGuests {
 
 export interface uploadFiles {
   fileName: string;
+  fileURL: string;
   fileDescription?: string;
 }
 

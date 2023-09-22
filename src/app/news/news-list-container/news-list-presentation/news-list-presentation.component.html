@@ -22,8 +22,71 @@
   <!-- End: Add New Button -->
 </div>
 <!-- End: Action Area -->
+
+<!-- News Card Listing -->
+<div class="grid gap-2">
+  <div class="g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
+    <carousel>
+      <slide *ngFor="let news of newsList | slice : 0 : 5">
+        <div class="bg-secondary-subtle rounded">
+          <img
+            src="https://media.istockphoto.com/id/640318118/photo/sunset-over-indian-ocean.webp?b=1&s=612x612&w=0&k=20&c=JhzoAxaY-g6w534HVzM0rcAv8RJhLc1NYg88NAywSRY="
+            alt="first slide"
+            class="rounded d-block"
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <a
+              [routerLink]="['/news', news.id]"
+              class="h4 d-inline-flex mb-1"
+              [title]="news.subject"
+              >{{ news.subject | textTruncate : 40 }}</a
+            >
+            <p class="small mb-1">
+              {{ news.centerDetails.district }} -
+              {{ news.createdOn | date : "dd-MM-yyyy, h:mm a" }}
+            </p>
+          </div>
+        </div>
+      </slide>
+    </carousel>
+  </div>
+  <div
+    class="g-col-lg-3 g-col-sm-4 g-col-12"
+    *ngFor="let news of newsList | slice : 5"
+  >
+    <div class="card h-100">
+      <img
+        *ngIf="news.files?.length"
+        class="card-img-top"
+        [src]="news.files && news.files[0].fileURL"
+        [alt]="news.files && news.files[0].fileName"
+      />
+      <!-- <img
+        *ngIf="!news.files?.length"
+        src="https://media.istockphoto.com/id/640318118/photo/sunset-over-indian-ocean.webp?b=1&s=612x612&w=0&k=20&c=JhzoAxaY-g6w534HVzM0rcAv8RJhLc1NYg88NAywSRY="
+        class="card-img-top"
+        alt="Thumbnail"
+      /> -->
+      <div class="card-body">
+        <small class="text-muted"
+          >{{ news.centerDetails.district }} -
+          {{ news.createdOn | date : "dd-MM-yyyy, h:mm a" }}</small
+        >
+        <a
+          [routerLink]="['/news', news.id]"
+          [title]="news.subject"
+          class="d-block h4 mb-0"
+          >{{ news.subject | textTruncate : 50 }}</a
+        >
+        <a [routerLink]="['edit', news.id]">Edit</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- News Card Listing -->
+
 <!-- News Listing -->
-<table class="table table-bordered" aria-describedby="News Listing">
+<!-- <table class="table table-bordered" aria-describedby="News Listing">
   <colgroup>
     <col style="width: 10px" />
     <col style="width: 200px" />
@@ -124,5 +187,5 @@
       </tr>
     </ng-container>
   </tbody>
-</table>
+</table> -->
 <!-- End: News Listing -->

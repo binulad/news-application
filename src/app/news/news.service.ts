@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddNews, News } from './news.model';
 import { FormGroup } from '@angular/forms';
-import { BehaviorSubject, Subject, map } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 const API_URL = 'http://localhost:3000/news';
 
@@ -12,7 +12,7 @@ const API_URL = 'http://localhost:3000/news';
 export class NewsService {
   public newsList = new Subject<News[]>();
   public getNews = new BehaviorSubject<any>({});
-  public submitNews = new Subject<FormGroup>();
+  public submitNews = new Subject<any>();
   public deletedNewsId = new Subject<number>();
 
   constructor(private http: HttpClient) {}
@@ -49,7 +49,13 @@ export class NewsService {
    * @param newsId Passed the news ID
    * @returns Get the Updated News
    */
-  updateNews(newsData: FormGroup, newsId: number) {
+  updateNews(newsData: any, newsId: number) {
+    // let headers = new HttpHeaders();
+    // headers.append('Content-Type', 'multipart/form-data');
+
+    // return this.http.put(`${API_URL}/${newsId}`, newsData, {
+    //   headers: headers,
+    // });
     return this.http.put(`${API_URL}/${newsId}`, newsData);
   }
 

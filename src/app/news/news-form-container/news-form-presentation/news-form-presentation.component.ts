@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  FormGroup,
+  FormArray,
+  FormControl,
+  Validators,
+  Form,
+} from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Constants } from '../../news.constant';
 import { AddNews, Departments } from '../../news.model';
@@ -10,6 +16,8 @@ import { NewsService } from '../../news.service';
   templateUrl: './news-form-presentation.component.html',
 })
 export class NewsFormPresentationComponent implements OnInit {
+  @ViewChild('uploadFile') uploadFileInput: any;
+
   newsForm!: FormGroup;
   maxDate: Date = new Date();
   minFromDate: Date = new Date();
@@ -31,6 +39,10 @@ export class NewsFormPresentationComponent implements OnInit {
 
   get guestDetails(): FormArray {
     return this.newsForm.get('guestDetails') as FormArray;
+  }
+
+  get files(): FormArray {
+    return this.newsForm.get('files') as FormArray;
   }
 
   ngOnInit(): void {
@@ -60,7 +72,7 @@ export class NewsFormPresentationComponent implements OnInit {
     let newsDescription = '';
     let guestDetails: any[] = [];
     let centerDetails = Object.assign({});
-    let files = null;
+    let files: any[] = [];
 
     if (this.isEdit) {
       subject = this.editNewsForm.subject;
@@ -83,7 +95,18 @@ export class NewsFormPresentationComponent implements OnInit {
         }
       }
       centerDetails = Object.assign({}, this.editNewsForm.centerDetails);
-      files = this.editNewsForm.files;
+      if (this.editNewsForm.files) {
+        for (const file of this.editNewsForm.files) {
+          files.push(
+            this.createFileGroup(
+              file.fileName,
+              file.fileURL,
+              file.fileDescription
+            )
+          );
+        }
+        this.selectedFiles = [...this.editNewsForm.files];
+      }
     }
 
     this.newsForm = new FormGroup({
@@ -109,7 +132,19 @@ export class NewsFormPresentationComponent implements OnInit {
         district: new FormControl(centerDetails.district, Validators.required),
         areaName: new FormControl(centerDetails.areaName, Validators.required),
       }),
-      files: new FormArray([]),
+      files: new FormArray(files),
+    });
+  }
+
+  createFileGroup(
+    fileName?: string,
+    fileURL?: string,
+    fileDescription?: string
+  ): FormGroup {
+    return new FormGroup({
+      fileName: new FormControl(fileName),
+      fileURL: new FormControl(fileURL),
+      fileDescription: new FormControl(fileDescription),
     });
   }
 
@@ -145,26 +180,44 @@ export class NewsFormPresentationComponent implements OnInit {
       ? this.editNewsForm.createdOn
       : new Date();
     newsData.value['updatedOn'] = this.isEdit ? new Date() : null;
+
     this.newsService.submitNews.next(newsData.value);
   }
 
-  onFileSelect(event: any) {
+  onFileChange(event: any) {
     const files = event.target.files;
+
     if (!files.length) {
       return;
     }
-    // this.selectedFiles = files;
 
-    // const formData = new FormData();
-    [...files].forEach((file) => {
-      const reader = new FileReader();
-
-      reader.readAsDataURL(file);
-      reader.onload = (_event) => {
-        file.url = reader.result;
-      };
-      // formData.append('file', file, file.name);
+    [...files].forEach(async (file) => {
+      await this.toBase64(file);
     });
-    this.selectedFiles = files;
+
+    this.selectedFiles.push(...files);
+    this.uploadFileInput.nativeElement.value = '';
+  }
+
+  toBase64(file: any) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        file.fileURL = reader.result;
+        (this.newsForm.get('files') as FormArray).push(
+          this.createFileGroup(file.name, file.fileURL, '')
+        );
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject();
+      };
+    });
+  }
+
+  removeFile(index: number) {
+    this.files.removeAt(index);
+    this.selectedFiles.splice(index, 1);
   }
 }

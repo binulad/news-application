@@ -3,6 +3,8 @@ $primary: #8E44AD;
 // Fonts
 $font-family-base: 'Jost', sans-serif;
 
+$enable-cssgrid: true;
+
 // Container
 $grid-breakpoints: (
   xs: 0,
@@ -21,3 +23,6 @@ $container-max-widths: (
   xxl: 1320px,
   xxxl: 1520px
 );
+
+//Button
+$input-btn-font-size: 0.875rem;

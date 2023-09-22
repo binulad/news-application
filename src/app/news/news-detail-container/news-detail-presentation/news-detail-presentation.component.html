@@ -60,15 +60,15 @@
               *ngFor="let guest of newsDetails.guestDetails"
             >
               <div class="row g-2">
-                <p class="col-md-6 mb-0">
+                <p class="col-lg-3 col-md-6 mb-0">
                   Name:
                   <span class="text-muted">{{ guest.guestName }}</span>
                 </p>
-                <p class="col-md-6 mb-0">
+                <p class="col-lg-3 col-md-6 mb-0">
                   Identification:
                   <span class="text-muted">{{ guest.identification }}</span>
                 </p>
-                <p class="col-12 mb-0">
+                <p class="col-lg-6 col-12 mb-0">
                   Speech Description:
                   <span class="text-muted">{{ guest.speechDescription }}</span>
                 </p>
@@ -78,11 +78,11 @@
         </div>
       </div>
     </div>
-    <!-- News -->
+    <!-- End: News -->
 
     <!-- Centre Details -->
     <p class="mb-2">Centre Details:</p>
-    <div class="card bg-light" *ngIf="newsDetails.centerDetails">
+    <div class="card bg-light mb-3" *ngIf="newsDetails.centerDetails">
       <div class="card-body">
         <div class="row g-2">
           <p class="col-md-4 col-sm-6 mb-0">
@@ -118,8 +118,31 @@
         </div>
       </div>
     </div>
-
     <!-- End: Centre Details -->
+
+    <!-- Attachment -->
+    <p class="mb-2">Attachment(s):</p>
+    <div class="card bg-light" *ngIf="newsDetails.files?.length">
+      <div class="card-body">
+        <div class="grid gap-3">
+          <div
+            class="g-col-lg-2 g-col-md-4 g-col-sm-6 g-col-12 bg-white rounded mb-0"
+            *ngFor="let file of newsDetails.files"
+          >
+            <img
+              [src]="file.fileURL"
+              [alt]="file.fileName"
+              class="selected-img rounded-top"
+            />
+            <span class="text-muted d-flex p-2">{{
+              file.fileDescription ? file.fileDescription : "-"
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!newsDetails.files?.length">No Attachment Found</p>
+    <!-- End: Attachment -->
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-between">
