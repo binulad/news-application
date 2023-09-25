@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NewsService } from '../news.service';
-import { Subscription } from 'rxjs';
+import { Subscription, debounce, debounceTime, map } from 'rxjs';
+import { QueryParams } from '../news.model';
 
 @Component({
   selector: 'app-news-list-container',
@@ -8,14 +9,16 @@ import { Subscription } from 'rxjs';
 })
 export class NewsListContainerComponent implements OnInit, OnDestroy {
   deletedNewsSub!: Subscription;
-  abc?: string;
-  constructor(private newsService: NewsService) {
-    // this.abc = '';
-  }
+  queryParams: QueryParams = {
+    q: '',
+    sortBy: 'createdOn',
+    direction: 'desc',
+  };
+  searchNewsSub!: Subscription;
+
+  constructor(private newsService: NewsService) {}
 
   ngOnInit(): void {
-    this.getAllNews();
-
     this.deletedNewsSub = this.newsService.deletedNewsId.subscribe(
       (newsId: number) => {
         if (newsId) {
@@ -23,21 +26,32 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    this.searchNewsSub = this.newsService.searchData
+      .pipe(
+        debounceTime(500),
+        map((searchText) => {
+          this.queryParams.q = searchText;
+          this.getAllNews(this.queryParams);
+        })
+      )
+      .subscribe();
   }
 
-  getAllNews() {
-    this.newsService.getAllNews().subscribe((response) => {
+  getAllNews(queryParams: QueryParams) {
+    this.newsService.getAllNews(queryParams).subscribe((response) => {
       this.newsService.newsList.next(response);
     });
   }
 
   onDelete(newsId: number) {
     this.newsService.deleteNews(newsId).subscribe(() => {
-      this.getAllNews();
+      this.getAllNews(this.queryParams);
     });
   }
 
   ngOnDestroy(): void {
     this.deletedNewsSub.unsubscribe();
+    this.searchNewsSub.unsubscribe();
   }
 }

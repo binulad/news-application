@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddNews, News } from './news.model';
+import { AddNews, News, QueryParams } from './news.model';
 import { FormGroup } from '@angular/forms';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, map } from 'rxjs';
 
 const API_URL = 'http://localhost:3000/news';
 
@@ -14,15 +14,22 @@ export class NewsService {
   public getNews = new BehaviorSubject<any>({});
   public submitNews = new Subject<any>();
   public deletedNewsId = new Subject<number>();
+  public searchData = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient) {}
 
   /**
    * This method called to get all News
    * @returns News Array
+   * q=Lorem&_sort=createdOn&_order=desc
    */
-  getAllNews() {
-    return this.http.get<News[]>(`${API_URL}`);
+  getAllNews(params: QueryParams) {
+    const search = params.q;
+    const sortBy = params.sortBy;
+    const direction = params.direction;
+    return this.http.get<News[]>(
+      `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}`
+    );
   }
 
   /**
@@ -50,12 +57,6 @@ export class NewsService {
    * @returns Get the Updated News
    */
   updateNews(newsData: any, newsId: number) {
-    // let headers = new HttpHeaders();
-    // headers.append('Content-Type', 'multipart/form-data');
-
-    // return this.http.put(`${API_URL}/${newsId}`, newsData, {
-    //   headers: headers,
-    // });
     return this.http.put(`${API_URL}/${newsId}`, newsData);
   }
 

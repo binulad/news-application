@@ -319,7 +319,6 @@
     <!-- End: Centre Details -->
 
     <!-- Attachments -->
-    <!-- {{ newsForm.value | json }} -->
     <div class="card mt-3" formArrayName="files">
       <div class="card-header d-flex align-items-center">Attachments</div>
       <div class="card-body">
@@ -330,7 +329,6 @@
           multiple
           (change)="onFileChange($event)"
         />
-        <!-- {{ selectedFiles | json }} -->
         <ul
           class="list-unstyled mt-3 mb-0 row g-3"
           *ngIf="selectedFiles.length"

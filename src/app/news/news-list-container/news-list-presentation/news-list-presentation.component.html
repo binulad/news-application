@@ -1,8 +1,20 @@
 <!-- Action Area -->
 <div class="d-flex mb-2">
   <!-- Add New Button -->
-  <div class="flex-shrink-0 ms-auto">
-    <a routerLink="new" class="btn btn-primary d-flex align-items-center">
+  <div class="flex-shrink-0 ms-auto d-flex align-items-center">
+    <!-- Search Block -->
+    <div class="search__block">
+      <input
+        class="form-control"
+        type="text"
+        placeholder="Search"
+        #search="ngModel"
+        ngModel
+        (keyup)="onSearch(search.value)"
+      />
+    </div>
+    <!-- End: Search Block -->
+    <a routerLink="new" class="btn btn-primary d-flex align-items-center ms-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -24,66 +36,176 @@
 <!-- End: Action Area -->
 
 <!-- News Card Listing -->
-<div class="grid gap-2">
-  <div class="g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
-    <carousel>
-      <slide *ngFor="let news of newsList | slice : 0 : 5">
+<div class="grid gap-2" *ngIf="newsList.length">
+  <div class="g-col-xl-4 g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
+    <carousel (activeSlideChange)="changeSlide()">
+      <slide *ngFor="let news of newsList | slice : 0 : 5; let i = index">
         <div class="bg-secondary-subtle rounded">
-          <img
-            src="https://media.istockphoto.com/id/640318118/photo/sunset-over-indian-ocean.webp?b=1&s=612x612&w=0&k=20&c=JhzoAxaY-g6w534HVzM0rcAv8RJhLc1NYg88NAywSRY="
-            alt="first slide"
-            class="rounded d-block"
-          />
-          <div class="carousel-caption d-none d-md-block">
+          <div class="position-relative">
+            <img
+              *ngIf="!news.files?.length"
+              src="https://media.istockphoto.com/id/640318118/photo/sunset-over-indian-ocean.webp?b=1&s=612x612&w=0&k=20&c=JhzoAxaY-g6w534HVzM0rcAv8RJhLc1NYg88NAywSRY="
+              alt="first slide"
+              class="rounded d-block"
+              height="350"
+            />
+            <img
+              *ngIf="news.files?.length"
+              class="rounded d-block"
+              height="350"
+              [src]="news.files && news.files[0].fileURL"
+              [alt]="news.files && news.files[0].fileName"
+            />
+            <div
+              class="position-absolute rounded top-0 start-0 h-100 w-100 bg-dark bg-opacity-75"
+            ></div>
+          </div>
+          <div class="carousel-caption text-start">
+            <div class="d-flex align-items-center justify-content-between">
+              <p class="small mb-0 flex-grow-1">
+                {{ news.centerDetails.district }} -
+                {{ getTimeSince(news.createdOn) }}
+              </p>
+              <div class="flex-shrink-0 btn-group dropup">
+                <button
+                  type="button"
+                  class="btn btn-link"
+                  (click)="handleDropdown(i)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="white"
+                    class="bi bi-three-dots-vertical"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                    />
+                  </svg>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end show"
+                  *ngIf="isOpenDropdown && activeIndex == i"
+                  @openClose
+                >
+                  <li>
+                    <a class="dropdown-item" [routerLink]="['edit', news.id]"
+                      >Edit</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      type="button"
+                      (click)="onDelete(news.id)"
+                      class="dropdown-item"
+                      >Delete</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
             <a
               [routerLink]="['/news', news.id]"
-              class="h4 d-inline-flex mb-1"
+              class="h5 mb-1"
               [title]="news.subject"
-              >{{ news.subject | textTruncate : 40 }}</a
+              >{{ news.subject | textTruncate : 30 }}</a
             >
-            <p class="small mb-1">
-              {{ news.centerDetails.district }} -
-              {{ news.createdOn | date : "dd-MM-yyyy, h:mm a" }}
-            </p>
           </div>
         </div>
       </slide>
     </carousel>
   </div>
   <div
-    class="g-col-lg-3 g-col-sm-4 g-col-12"
-    *ngFor="let news of newsList | slice : 5"
+    class="g-col-xl-2 g-col-lg-3 g-col-sm-4 g-col-12"
+    *ngFor="let news of newsList | slice : 5; index as i"
   >
-    <div class="card h-100">
+    <div
+      class="card shadow-sm h-100"
+      [class.bg-primary-subtle]="!news.files?.length"
+    >
       <img
         *ngIf="news.files?.length"
         class="card-img-top"
         [src]="news.files && news.files[0].fileURL"
         [alt]="news.files && news.files[0].fileName"
       />
-      <!-- <img
-        *ngIf="!news.files?.length"
-        src="https://media.istockphoto.com/id/640318118/photo/sunset-over-indian-ocean.webp?b=1&s=612x612&w=0&k=20&c=JhzoAxaY-g6w534HVzM0rcAv8RJhLc1NYg88NAywSRY="
-        class="card-img-top"
-        alt="Thumbnail"
-      /> -->
       <div class="card-body">
-        <small class="text-muted"
-          >{{ news.centerDetails.district }} -
-          {{ news.createdOn | date : "dd-MM-yyyy, h:mm a" }}</small
-        >
+        <div class="d-flex align-items-center justify-content-between">
+          <small class="text-muted"
+            >{{ news.centerDetails.district }} -
+            {{ getTimeSince(news.createdOn) }}</small
+          >
+
+          <div class="flex-shrink-0 btn-group dropup">
+            <button
+              type="button"
+              class="btn btn-link"
+              (click)="handleDropdown(i + 5)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-three-dots-vertical"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                />
+              </svg>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end show"
+              *ngIf="isOpenDropdown && activeIndex == i + 5"
+              @openClose
+            >
+              <li>
+                <a class="dropdown-item" [routerLink]="['edit', news.id]"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  type="button"
+                  (click)="onDelete(news.id)"
+                  class="dropdown-item"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
         <a
           [routerLink]="['/news', news.id]"
           [title]="news.subject"
-          class="d-block h4 mb-0"
+          class="d-block h5 mb-0"
           >{{ news.subject | textTruncate : 50 }}</a
         >
-        <a [routerLink]="['edit', news.id]">Edit</a>
+        <!-- <a [routerLink]="['edit', news.id]">Edit</a>
+        <a type="button" (click)="onDelete(news.id)" class="ms-2">Delete</a> -->
       </div>
     </div>
   </div>
 </div>
+
+<div class="card p-3" *ngIf="!newsList.length">
+  <p class="text-center mb-0">No Record Found</p>
+</div>
 <!-- News Card Listing -->
+
+<!-- Conformation Modal -->
+<app-confirmation-modal
+  *ngIf="isOpenConfirmation"
+  (closeModal)="isOpenConfirmation = $event"
+  (onClickYes)="handleYes()"
+>
+  <span modalHeader>{{ confirmationHeader }}</span>
+  <p class="mb-0">{{ confirmationMessage }}</p>
+</app-confirmation-modal>
+<!-- End: Conformation Modal -->
 
 <!-- News Listing -->
 <!-- <table class="table table-bordered" aria-describedby="News Listing">

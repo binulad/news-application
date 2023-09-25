@@ -1,4 +1,6 @@
 export const Constants = {
+  DELETE_MESSAGE: 'Are you sure you want to remove this news?',
+  DELETE_HEADER: 'Confirm Deletion',
   DepartmentList: [
     { id: 1, name: 'Administrators Wing' },
     { id: 2, name: 'Art & Culture Wing' },

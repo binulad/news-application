@@ -55,3 +55,14 @@ export interface Departments {
   id: number;
   name: string;
 }
+
+export class QueryParams {
+  q: string;
+  sortBy: string;
+  direction: string;
+  constructor(q: string, sortBy: string, direction: string) {
+    this.q = q || '';
+    this.sortBy = sortBy || 'createdOn';
+    this.direction = direction || 'desc';
+  }
+}

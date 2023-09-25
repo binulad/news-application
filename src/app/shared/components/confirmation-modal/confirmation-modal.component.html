@@ -1,0 +1,35 @@
+<div class="modal-backdrop fade show" (click)="closedModal()"></div>
+<div class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <ng-content select="[modalHeader]"></ng-content>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closedModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="handleYes()"
+        >
+          Yes
+        </button>
+        <button type="button" class="btn btn-primary" (click)="closedModal()">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

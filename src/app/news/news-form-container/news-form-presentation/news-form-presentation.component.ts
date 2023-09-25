@@ -191,12 +191,19 @@ export class NewsFormPresentationComponent implements OnInit {
       return;
     }
 
-    [...files].forEach(async (file) => {
-      await this.toBase64(file);
-    });
+    // Create an array of promises for each file conversion
+    const promises = [...files].map((file) => this.toBase64(file));
 
-    this.selectedFiles.push(...files);
-    this.uploadFileInput.nativeElement.value = '';
+    // Use Promise.all to wait for all conversions to complete
+    Promise.all(promises)
+      .then((results) => {
+        // All files have been converted, you can now push them to the FormArray
+        this.selectedFiles.push(...files);
+        this.uploadFileInput.nativeElement.value = '';
+      })
+      .catch((error) => {
+        console.error('Error converting files:', error);
+      });
   }
 
   toBase64(file: any) {
@@ -205,9 +212,9 @@ export class NewsFormPresentationComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         file.fileURL = reader.result;
-        (this.newsForm.get('files') as FormArray).push(
-          this.createFileGroup(file.name, file.fileURL, '')
-        );
+        // Assuming 'files' is a FormArray in your 'newsForm'
+        const filesFormArray = this.newsForm.get('files') as FormArray;
+        filesFormArray.push(this.createFileGroup(file.name, file.fileURL, ''));
         resolve(reader.result);
       };
       reader.onerror = () => {

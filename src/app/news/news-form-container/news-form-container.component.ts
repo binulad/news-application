@@ -38,7 +38,6 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
       } else {
         this.addNews(newsData);
       }
-      this.router.navigate(['/news']);
     });
   }
 
@@ -47,9 +46,9 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
    * @param newsData Passed the updated news data
    */
   updateNews(newsData: FormGroup) {
-    console.log('newsData', newsData);
-
-    this.newsService.updateNews(newsData, this.id).subscribe();
+    this.newsService.updateNews(newsData, this.id).subscribe(() => {
+      this.router.navigate(['/news']);
+    });
   }
 
   /**
@@ -57,7 +56,9 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
    * @param newsData Passed the news data
    */
   addNews(newsData: FormGroup) {
-    this.newsService.addNews(newsData).subscribe();
+    this.newsService.addNews(newsData).subscribe(() => {
+      this.router.navigate(['/news']);
+    });
   }
 
   ngOnDestroy(): void {

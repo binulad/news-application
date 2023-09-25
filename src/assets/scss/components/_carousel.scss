@@ -1,6 +1,14 @@
 .news__carousel {
   img {
-    height: 100%;
     width: 100%;
   }
+
+  .dropdown-menu-end {
+    bottom: 100%;
+  }
+
+}
+
+.dropdown-menu-end {
+  right: 0;
 }

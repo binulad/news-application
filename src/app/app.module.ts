@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './core/header/header.component';
 import { HomeComponent } from './home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, HomeComponent],
@@ -17,6 +19,8 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     BrowserAnimationsModule,
     RouterModule,
+    FormsModule,
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
