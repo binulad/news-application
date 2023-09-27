@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { News } from '../../news.model';
 import { NewsService } from '../../news.service';
-import { Subscription, debounce, interval } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Constants } from '../../news.constant';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
+import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-news-list-presentation',
@@ -21,6 +23,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
   ],
 })
 export class NewsListPresentationComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
+
   public newsList: News[] = [];
   newsListSub!: Subscription;
   isOpenConfirmation: boolean = false;
@@ -40,49 +44,55 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
 
   onDelete(newsId: number) {
     this.deletedNewsId = newsId;
-    this.isOpenConfirmation = true;
-    this.confirmationHeader = Constants.DELETE_HEADER;
-    this.confirmationMessage = Constants.DELETE_MESSAGE;
-    // this.newsService.deletedNewsId.next(newsId);
+    this.loadComponent();
+    // this.isOpenConfirmation = true;
+    // this.confirmationHeader = Constants.DELETE_HEADER;
+    // this.confirmationMessage = Constants.DELETE_MESSAGE;
+  }
+
+  loadComponent() {
+    const viewContainerRef = this.modalHost.viewContainerRef;
+    viewContainerRef.clear();
+
+    const modalData = {
+      title: Constants.DELETE_HEADER,
+      content: Constants.DELETE_MESSAGE,
+    };
+
+    const contentRef = viewContainerRef.createComponent(
+      ConfirmationModalComponent
+    );
+    contentRef.instance.modalData = modalData;
+
+    // Get the response(Output Event) from the confirmation modal
+    contentRef.instance.closeModal.subscribe(() => {
+      contentRef.destroy();
+    });
+
+    contentRef.instance.onClickYes.subscribe(() => {
+      this.handleYes();
+      contentRef.destroy();
+    });
   }
 
   handleYes() {
-    this.isOpenConfirmation = false;
+    // this.isOpenConfirmation = false;
     if (this.deletedNewsId) {
       this.newsService.deletedNewsId.next(this.deletedNewsId);
     }
     this.deletedNewsId = undefined;
   }
 
-  getTimeSince(date: any) {
-    const now = new Date();
-    const timeStamp = new Date(date);
-    const secondAgo = Math.floor((+now - +timeStamp) / 1000);
+  // handleDropdown(activeIndex: number) {
+  //   this.activeIndex = activeIndex;
+  //   this.isOpenDropdown = !this.isOpenDropdown;
+  // }
 
-    if (secondAgo < 60) {
-      return `${secondAgo} sec ago`;
-    } else if (secondAgo < 3600) {
-      const minuteAgo = Math.floor(secondAgo / 60);
-      return `${minuteAgo} min ago`;
-    } else if (secondAgo < 86400) {
-      const hourAgo = Math.floor(secondAgo / 3600);
-      return `${hourAgo} hr ago`;
-    } else {
-      const daysAgo = Math.floor(secondAgo / 86400);
-      return `${daysAgo} day ago`;
-    }
-  }
-
-  handleDropdown(activeIndex: number) {
-    this.activeIndex = activeIndex;
-    this.isOpenDropdown = !this.isOpenDropdown;
-  }
-
-  changeSlide() {
-    if (this.activeIndex && this.activeIndex < 5) {
-      this.isOpenDropdown = false;
-    }
-  }
+  // changeSlide() {
+  //   if (this.activeIndex && this.activeIndex < 5) {
+  //     this.isOpenDropdown = false;
+  //   }
+  // }
 
   onSearch(searchText: string) {
     this.newsService.searchData.next(searchText);

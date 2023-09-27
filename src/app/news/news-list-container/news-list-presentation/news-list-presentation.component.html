@@ -38,7 +38,11 @@
 <!-- News Card Listing -->
 <div class="grid gap-2" *ngIf="newsList.length">
   <div class="g-col-xl-4 g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
-    <carousel (activeSlideChange)="changeSlide()">
+    <!-- (activeSlideChange)="changeSlide()" -->
+    <carousel>
+      <h5 class="position-absolute top-0 start-0 z-1 text-white mt-2 ms-3">
+        Latest News
+      </h5>
       <slide *ngFor="let news of newsList | slice : 0 : 5; let i = index">
         <div class="bg-secondary-subtle rounded">
           <div class="position-relative">
@@ -64,13 +68,14 @@
             <div class="d-flex align-items-center justify-content-between">
               <p class="small mb-0 flex-grow-1">
                 {{ news.centerDetails.district }} -
-                {{ getTimeSince(news.createdOn) }}
+                {{ news.createdOn }}
               </p>
               <div class="flex-shrink-0 btn-group dropup">
                 <button
                   type="button"
                   class="btn btn-link"
-                  (click)="handleDropdown(i)"
+                  appDropdown
+                  #sliderDropdown="appDropdown"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -86,8 +91,9 @@
                   </svg>
                 </button>
                 <ul
+                  *ngIf="sliderDropdown.isShow"
                   class="dropdown-menu dropdown-menu-end show"
-                  *ngIf="isOpenDropdown && activeIndex == i"
+                  [class.show]="sliderDropdown.isShow"
                   @openClose
                 >
                   <li>
@@ -119,7 +125,7 @@
   </div>
   <div
     class="g-col-xl-2 g-col-lg-3 g-col-sm-4 g-col-12"
-    *ngFor="let news of newsList | slice : 5; index as i"
+    *ngFor="let news of newsList | slice : 5; let i = index"
   >
     <div
       class="card shadow-sm h-100"
@@ -134,16 +140,11 @@
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
           <small class="text-muted"
-            >{{ news.centerDetails.district }} -
-            {{ getTimeSince(news.createdOn) }}</small
+            >{{ news.centerDetails.district }} - {{ news.createdOn }}</small
           >
 
-          <div class="flex-shrink-0 btn-group dropup">
-            <button
-              type="button"
-              class="btn btn-link"
-              (click)="handleDropdown(i + 5)"
-            >
+          <!-- <div class="flex-shrink-0 btn-group dropup">
+            <button type="button" class="btn btn-link" (click)="handleDropdown(i + 5)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -176,6 +177,49 @@
                 >
               </li>
             </ul>
+          </div> -->
+
+          <!-- Directive -->
+          <div class="flex-shrink-0 btn-group dropup">
+            <button
+              type="button"
+              appDropdown
+              #dropdown="appDropdown"
+              class="btn btn-link"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-three-dots-vertical"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                />
+              </svg>
+            </button>
+            <ul
+              *ngIf="dropdown.isShow"
+              class="dropdown-menu dropdown-menu-end"
+              [class.show]="dropdown.isShow"
+              @openClose
+            >
+              <li>
+                <a class="dropdown-item" [routerLink]="['edit', news.id]"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  type="button"
+                  (click)="onDelete(news.id)"
+                  class="dropdown-item"
+                  >Delete</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
         <a
@@ -184,8 +228,6 @@
           class="d-block h5 mb-0"
           >{{ news.subject | textTruncate : 50 }}</a
         >
-        <!-- <a [routerLink]="['edit', news.id]">Edit</a>
-        <a type="button" (click)="onDelete(news.id)" class="ms-2">Delete</a> -->
       </div>
     </div>
   </div>
@@ -197,117 +239,16 @@
 <!-- News Card Listing -->
 
 <!-- Conformation Modal -->
-<app-confirmation-modal
+<!-- <app-confirmation-modal
   *ngIf="isOpenConfirmation"
   (closeModal)="isOpenConfirmation = $event"
   (onClickYes)="handleYes()"
 >
   <span modalHeader>{{ confirmationHeader }}</span>
   <p class="mb-0">{{ confirmationMessage }}</p>
-</app-confirmation-modal>
+</app-confirmation-modal> -->
 <!-- End: Conformation Modal -->
 
-<!-- News Listing -->
-<!-- <table class="table table-bordered" aria-describedby="News Listing">
-  <colgroup>
-    <col style="width: 10px" />
-    <col style="width: 200px" />
-    <col style="width: 100px" />
-    <col style="width: 100px" />
-    <col style="width: 100px" />
-    <col style="width: 100px" />
-    <col style="width: 120px" />
-    <col style="width: 120px" />
-    <col style="width: 80px" />
-  </colgroup>
-  <thead>
-    <tr>
-      <th scope="col">No.</th>
-      <th scope="col">News Subject</th>
-      <th scope="col">From Date</th>
-      <th scope="col">To Date</th>
-      <th scope="col">Zone Name</th>
-      <th scope="col">District</th>
-      <th scope="col">Centre Name</th>
-      <th scope="col">Created On</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngIf="newsList.length">
-      <tr *ngFor="let news of newsList">
-        <td>{{ news.id }}</td>
-        <td>{{ news.subject }}</td>
-        <td>{{ news.fromDate | date : "dd-MM-yyyy" }}</td>
-        <td>{{ news.toDate | date : "dd-MM-yyyy" }}</td>
-        <td>{{ news.centerDetails.zoneName }}</td>
-        <td>{{ news.centerDetails.district }}</td>
-        <td>{{ news.centerDetails.centreName }}</td>
-        <td>{{ news.createdOn | date : "dd-MM-yyyy, h:mm a" }}</td>
-        <td>
-          <div class="d-flex justify-content-start gap-3">
-            <a [routerLink]="['/news', news.id]" class="text-muted">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-eye"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"
-                />
-                <path
-                  d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"
-                />
-              </svg>
-            </a>
-            <a [routerLink]="['edit', news.id]" class="text-muted">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-pencil-square"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-                />
-                <path
-                  fill-rule="evenodd"
-                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                />
-              </svg>
-            </a>
-            <a type="button" (click)="onDelete(news.id)" class="text-danger">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-trash"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"
-                />
-                <path
-                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"
-                />
-              </svg>
-            </a>
-          </div>
-        </td>
-      </tr>
-    </ng-container>
-
-    <ng-container *ngIf="!newsList.length">
-      <tr>
-        <td class="text-center text-muted" colspan="9">No Record Found</td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table> -->
-<!-- End: News Listing -->
+<!-- Dynamically Load Confirmation Modal -->
+<ng-template appModalHost></ng-template>
+<!-- End: Dynamically Load Confirmation Modal -->

@@ -170,52 +170,27 @@
           No Attachment Found
         </p>
       </div>
-      <!-- Modal -->
-      <div
-        bsModal
-        #lgModal="bs-modal"
-        class="modal fade"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="dialog-sizes-name1"
-      >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 id="dialog-sizes-name1" class="modal-title pull-left">
-                Attachment
-              </h4>
-              <button
-                type="button"
-                class="btn-close close pull-right"
-                (click)="lgModal.hide()"
-                aria-label="Close"
-              >
-                <span aria-hidden="true" class="visually-hidden">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <carousel
-                [(activeSlide)]="startIndex"
-                [showIndicators]="false"
-                [interval]="0"
-              >
-                <slide *ngFor="let file of newsDetails.files">
-                  <img
-                    [src]="file.fileURL"
-                    class="w-100"
-                    [alt]="file.fileName"
-                  />
-                  <p class="mb-0 mt-2">{{ file.fileDescription }}</p>
-                </slide>
-              </carousel>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- End: Modal -->
     </div>
     <!-- End: Attachment -->
+
+    <!-- Dynamic Modal -->
+    <ng-template appModalHost></ng-template>
+    <!-- End: Dynamic Modal -->
+
+    <!-- Modal Body for Dynamic Component -->
+    <ng-template #modalBody>
+      <carousel
+        [(activeSlide)]="startIndex"
+        [showIndicators]="false"
+        [interval]="0"
+      >
+        <slide *ngFor="let file of newsDetails.files">
+          <img [src]="file.fileURL" class="w-100" [alt]="file.fileName" />
+          <p class="mb-0 mt-2">{{ file.fileDescription }}</p>
+        </slide>
+      </carousel>
+    </ng-template>
+    <!-- End: Modal Body for Dynamic Component -->
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-between">

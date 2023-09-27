@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -7,8 +13,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
-  modalRef?: BsModalRef;
-  config = {
-    keyboard: true,
-  };
+  @Input() modalData!: any;
+  @Output() destroyModal: EventEmitter<boolean> = new EventEmitter();
+
+  closedModal() {
+    this.destroyModal.emit(true);
+  }
 }
