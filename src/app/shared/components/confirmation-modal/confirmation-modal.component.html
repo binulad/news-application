@@ -1,13 +1,13 @@
-<div class="modal-backdrop fade show" (click)="closedModal()"></div>
-<div class="modal show d-block" tabindex="-1">
-  <div class="modal-dialog">
+<div class="modal-backdrop fade show"></div>
+<div class="modal show d-block" tabindex="-1" (keyup.esc)="closedModal()">
+  <div class="modal-dialog" #modalRef>
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          <!-- <ng-content select="[modalHeader]"></ng-content> -->
           {{ modalData.title }}
         </h5>
         <button
+          appFocus
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
@@ -16,7 +16,6 @@
         ></button>
       </div>
       <div class="modal-body">
-        <!-- <ng-content></ng-content> -->
         {{ modalData.content }}
       </div>
       <div class="modal-footer justify-content-center">

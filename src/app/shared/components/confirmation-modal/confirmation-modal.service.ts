@@ -12,6 +12,11 @@ export class ConfirmationModalService {
 
   constructor() {}
 
+  /**
+   * This method called to create the Dynamic Confirmation Modal Component
+   * @param modalHost Passed the modalHost Directive
+   * @param modalData Passed the Confirmation Modal Data
+   */
   loadConfirmationComponent(
     modalHost: ModalHostDirective,
     modalData: ConfirmationModal

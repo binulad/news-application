@@ -4,6 +4,7 @@ import { ConfirmationModalComponent } from './components/confirmation-modal/conf
 import { ModalComponent } from './components/modal/modal.component';
 import { ModalHostDirective } from './directives/modal-host.directive';
 import { DropdownDirective } from './directives/dropdown.directive';
+import { FocusDirective } from './directives/focus.directive';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { DropdownDirective } from './directives/dropdown.directive';
     ModalComponent,
     ModalHostDirective,
     DropdownDirective,
+    FocusDirective,
   ],
   imports: [CommonModule],
   exports: [
@@ -18,6 +20,7 @@ import { DropdownDirective } from './directives/dropdown.directive';
     ModalComponent,
     ModalHostDirective,
     DropdownDirective,
+    FocusDirective,
   ],
 })
 export class SharedModule {}

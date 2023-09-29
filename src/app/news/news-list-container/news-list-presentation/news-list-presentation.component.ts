@@ -28,12 +28,7 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
 
   public newsList: News[] = [];
   newsListSub!: Subscription;
-  isOpenConfirmation: boolean = false;
-  confirmationHeader: string = '';
-  confirmationMessage: string = '';
   deletedNewsId?: number;
-  isOpenDropdown: boolean = false;
-  activeIndex?: number;
   confirmationYesSub!: Subscription;
 
   constructor(
@@ -54,19 +49,29 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * This method called while delete the news
+   * @param newsId Passed the newsId
+   */
   onDelete(newsId: number) {
     this.deletedNewsId = newsId;
 
+    // Set the confirmation modal data
     const modalData: ConfirmationModal = {
       title: Constants.DELETE_HEADER,
       content: Constants.DELETE_MESSAGE,
     };
+
+    // Called the service to create Dynamic Confirmation Modal
     this.confirmationModalService.loadConfirmationComponent(
       this.modalHost,
       modalData
     );
   }
 
+  /**
+   * This method called while click "Yes" from the confirmation modal
+   */
   handleYes() {
     if (this.deletedNewsId) {
       this.newsService.deletedNewsId.next(this.deletedNewsId);
@@ -74,6 +79,10 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
     this.deletedNewsId = undefined;
   }
 
+  /**
+   * This method called while search the text
+   * @param searchText Passed the search text
+   */
   onSearch(searchText: string) {
     this.newsService.searchData.next(searchText);
   }

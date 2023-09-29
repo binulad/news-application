@@ -23,7 +23,6 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   minToDate!: Date;
   DepartmentAndWingList: Departments[] = Constants.DepartmentList;
   selectedFiles: any[] = [];
-  // url!: any;
   id!: number;
   isEdit: boolean = false;
   editNewsForm!: AddNews;
@@ -38,10 +37,16 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     this.minFromDate.setDate(this.maxDate.getDate() - 30);
   }
 
+  /**
+   * Get the guest detail Array from newsForm
+   */
   get guestDetails(): FormArray {
     return this.newsForm.get('guestDetails') as FormArray;
   }
 
+  /**
+   * Get the files Array from newsForm
+   */
   get files(): FormArray {
     return this.newsForm.get('files') as FormArray;
   }
@@ -68,6 +73,10 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  /**
+   * This method called to set the initial value of the newsForm
+   */
   initNewsForm() {
     let subject = '';
     let fromDate = null;
@@ -143,6 +152,13 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This method called to create the FileGroup Array
+   * @param fileName Passed the file name
+   * @param fileURL Passed the file url
+   * @param fileDescription Passed the file description
+   * @returns Return a FormGroup
+   */
   createFileGroup(
     fileName?: string,
     fileURL?: string,
@@ -155,6 +171,13 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This method called to get the Form Group of Guest Array
+   * @param guestName Passed the guest name
+   * @param identification Passed the identification of the guest
+   * @param speechDescription Passed the speechDescription of the guest
+   * @returns Return a FormGroup
+   */
   createGuestFormGroup(
     guestName?: string,
     identification?: string,
@@ -167,6 +190,12 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This method called to validate the Field
+   * @param fieldName Passed the field name
+   * @param formArray Passed the Array name (optional)
+   * @returns Return the boolean value
+   */
   validateField(fieldName: string, formArray?: any) {
     const fromGroup = formArray ? formArray : this.newsForm;
     return (
@@ -174,14 +203,25 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * This method called while add a new guest
+   */
   onAddNewGuest() {
     this.guestDetails.push(this.createGuestFormGroup());
   }
 
+  /**
+   * This method called while delete/remove the guest from array
+   * @param index Passed the index of the deleted guest
+   */
   deleteGuestDetails(index: number) {
     this.guestDetails.removeAt(index);
   }
 
+  /**
+   * This method called while submit the newsForm
+   * @param newsData Passed the newsData
+   */
   onSubmit(newsData: FormGroup) {
     newsData.value['createdOn'] = this.isEdit
       ? this.editNewsForm.createdOn
@@ -191,6 +231,11 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     this.newsService.submitNews.next(newsData.value);
   }
 
+  /**
+   * This method called while upload any files
+   * @param event Passed the event
+   * @returns Return if the no file selected otherwise add the selected files into the 'selectedFiles' array
+   */
   onFileChange(event: any) {
     const files = event.target.files;
 
@@ -213,6 +258,11 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * This method called to convert the selected image file into the base64 string
+   * @param file Passed the selected image file
+   * @returns Return the base64 string for that image
+   */
   toBase64(file: any) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -230,11 +280,19 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * This method called to remove the file from 'selectedFiles' Array
+   * @param index Passed the file index
+   */
   removeFile(index: number) {
     this.files.removeAt(index);
     this.selectedFiles.splice(index, 1);
   }
 
+  /**
+   * This method called while click on the back button
+   * If the newsForm data is updated then open the confirmation modal
+   */
   onClickBack() {
     if (this.newsForm.dirty) {
       const modalData: ConfirmationModal = {

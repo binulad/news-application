@@ -41,11 +41,7 @@
           </p>
           <p class="col-md-8 mb-0">
             Department(s)/Related Wing(s):
-            <span class="text-muted">{{
-              newsDetails.departmentOrWing
-                ? getDepartmentOrWing(+newsDetails.departmentOrWing)
-                : null
-            }}</span>
+            <span class="text-muted">{{ newsDetails.departmentOrWing }}</span>
           </p>
           <p class="col-12 mb-0">
             Programme Anchor Name:
@@ -189,6 +185,14 @@
           <p class="mb-0 mt-2">{{ file.fileDescription }}</p>
         </slide>
       </carousel>
+    </ng-template>
+
+    <ng-template #modalFooter>
+      <div class="flex-grow-1">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Close
+        </button>
+      </div>
     </ng-template>
     <!-- End: Modal Body for Dynamic Component -->
   </div>

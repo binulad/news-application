@@ -6,7 +6,7 @@ export interface News {
   days: number;
   noOfPeople: number;
   anchorName: string;
-  departmentOrWing?: string;
+  departmentOrWing: string;
   newsDescription: string;
   guestDetails: ChiefGuests[];
   centerDetails: CenterDetails;
@@ -22,7 +22,7 @@ export interface AddNews {
   days: number;
   noOfPeople: number;
   anchorName: string;
-  departmentOrWing?: string;
+  departmentOrWing: string;
   newsDescription: string;
   guestDetails: ChiefGuests[];
   centerDetails: CenterDetails;

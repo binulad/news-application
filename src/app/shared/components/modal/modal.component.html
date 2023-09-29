@@ -1,27 +1,30 @@
-<div class="modal-backdrop fade show" (click)="closedModal()"></div>
-<div class="modal show d-block" tabindex="-1" *ngIf="modalData">
-  <div class="modal-dialog">
+<div class="modal-backdrop fade show"></div>
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  role="dialog"
+  (keyup.esc)="closedModal()"
+>
+  <div class="modal-dialog modal-lg" #modalRef>
     <div class="modal-content">
-      <div class="modal-header" *ngIf="modalData?.modalTitle">
+      <div class="modal-header" *ngIf="modalData.modalTitle">
         <h5 class="modal-title">
-          {{ modalData?.modalTitle }}
+          {{ modalData.modalTitle }}
         </h5>
         <button
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
+          appFocus
           (click)="closedModal()"
         ></button>
       </div>
       <div class="modal-body">
-        <ng-container *ngTemplateOutlet="modalData?.content"></ng-container>
+        <ng-container *ngTemplateOutlet="modalData.content"></ng-container>
       </div>
-      <div
-        *ngIf="modalData?.modalFooter"
-        class="modal-footer justify-content-center"
-      >
-        {{ modalData?.modalFooter }}
+      <div *ngIf="modalData.modalFooter" class="modal-footer">
+        <ng-container *ngTemplateOutlet="modalData.modalFooter"></ng-container>
       </div>
     </div>
   </div>

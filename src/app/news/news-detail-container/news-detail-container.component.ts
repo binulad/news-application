@@ -21,6 +21,9 @@ export class NewsDetailContainerComponent implements OnInit {
     this.getNewsByID();
   }
 
+  /**
+   * This method called to get the news data from the newsId
+   */
   getNewsByID() {
     this.newsService.getNewsById(this.id).subscribe((response) => {
       this.newsService.getNews.next(response);

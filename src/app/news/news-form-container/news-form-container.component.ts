@@ -32,7 +32,6 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
     }
 
     this.submitNewsSub = this.newsService.submitNews.subscribe((newsData) => {
-      console.log('newsData:: ', newsData);
       if (this.isEdit) {
         this.updateNews(newsData);
       } else {

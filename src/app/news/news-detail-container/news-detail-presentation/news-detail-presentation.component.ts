@@ -6,11 +6,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { AddNews } from '../../news.model';
-import { Constants } from '../../news.constant';
 import { NewsService } from '../../news.service';
 import { Subscription } from 'rxjs';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
+import { Modal } from 'src/app/shared/models/common.model';
+import { ModalService } from 'src/app/shared/components/modal/modal.service';
 
 @Component({
   selector: 'app-news-detail-presentation',
@@ -18,6 +18,7 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
 })
 export class NewsDetailPresentationComponent implements OnInit, OnDestroy {
   @ViewChild('modalBody', { static: false }) modalBody!: TemplateRef<any>;
+  @ViewChild('modalFooter', { static: false }) modalFooter!: TemplateRef<any>;
 
   @ViewChild(ModalHostDirective)
   modalHost!: ModalHostDirective;
@@ -25,9 +26,11 @@ export class NewsDetailPresentationComponent implements OnInit, OnDestroy {
   newsDetails!: AddNews;
   newsSub!: Subscription;
   startIndex: number = 0;
-  isModalOpen: boolean = false;
 
-  constructor(private newsService: NewsService) {}
+  constructor(
+    private newsService: NewsService,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit(): void {
     this.newsSub = this.newsService.getNews.subscribe((response) => {
@@ -35,52 +38,27 @@ export class NewsDetailPresentationComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDepartmentOrWing(id: number) {
-    let getDepartment;
-    getDepartment = Constants.DepartmentList.find((item: any) => {
-      if (item.id == +id) {
-        return item.name;
-      }
-    });
-    return getDepartment?.name;
-  }
-
+  /**
+   * This method called to open the modal
+   * While click on any attached image the dynamic modal will open
+   * @param index Passed the attached image index
+   */
   openModal(index: number) {
-    this.loadComponent();
-
-    this.isModalOpen = true;
-    // this.modalRef?.show();
+    const modalData: Modal = {
+      modalTitle: 'Attachment',
+      content: this.modalBody,
+      modalFooter: this.modalFooter,
+    };
+    this.modalService.loadModalComponent(this.modalHost, modalData);
     this.startIndex = index;
   }
 
-  loadComponent() {
-    const viewContainerRef = this.modalHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    const modalData = {
-      modalTitle: 'Attachment',
-      content: this.modalBody,
-    };
-
-    const contentRef = viewContainerRef.createComponent(ModalComponent);
-    contentRef.instance.modalData = modalData;
-
-    // This method called to Remove the Dynamic Component
-    contentRef.instance.destroyModal.subscribe((value) => {
-      if (value) {
-        this.removeComponent();
-      }
-    });
-  }
-
-  removeComponent() {
+  /**
+   * This method called to close the dynamic modal
+   */
+  closeModal() {
     this.modalHost.viewContainerRef.remove();
   }
-
-  // closeModal() {
-  //   this.modalRef?.hide();
-  //   this.isModalOpen = false;
-  // }
 
   ngOnDestroy(): void {
     this.newsSub.unsubscribe();

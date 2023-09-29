@@ -38,12 +38,20 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * This method called to get all the News
+   * @param queryParams Passed the query parameters
+   */
   getAllNews(queryParams: QueryParams) {
     this.newsService.getAllNews(queryParams).subscribe((response) => {
       this.newsService.newsList.next(response);
     });
   }
 
+  /**
+   * This method called to delete the news record
+   * @param newsId Passed the newsId
+   */
   onDelete(newsId: number) {
     this.newsService.deleteNews(newsId).subscribe(() => {
       this.getAllNews(this.queryParams);

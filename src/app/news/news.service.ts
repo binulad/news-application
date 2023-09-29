@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AddNews, News, QueryParams } from './news.model';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subject, map } from 'rxjs';
+import { Constants } from './news.constant';
 
 const API_URL = 'http://localhost:3000/news';
 
@@ -69,7 +70,18 @@ export class NewsService {
    * @returns News details of the id
    */
   getNewsById(id: number) {
-    return this.http.get<AddNews>(`${API_URL}/${id}`);
+    return this.http.get<AddNews>(`${API_URL}/${id}`).pipe(
+      map((response) => {
+        const getDepartment = Constants.DepartmentList.find(
+          (department) => department.id == +response.departmentOrWing
+        );
+        response.departmentOrWing = getDepartment?.name
+          ? getDepartment?.name
+          : '';
+
+        return response;
+      })
+    );
   }
 
   /**
