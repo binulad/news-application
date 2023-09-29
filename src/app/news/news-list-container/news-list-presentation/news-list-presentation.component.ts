@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs';
 import { Constants } from '../../news.constant';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
-import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModal } from 'src/app/shared/models/common.model';
+import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
 
 @Component({
   selector: 'app-news-list-presentation',
@@ -33,66 +34,45 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   deletedNewsId?: number;
   isOpenDropdown: boolean = false;
   activeIndex?: number;
+  confirmationYesSub!: Subscription;
 
-  constructor(private newsService: NewsService) {}
+  constructor(
+    private newsService: NewsService,
+    private confirmationModalService: ConfirmationModalService
+  ) {}
 
   ngOnInit(): void {
     this.newsListSub = this.newsService.newsList.subscribe((response) => {
       this.newsList = response;
     });
+
+    this.confirmationYesSub =
+      this.confirmationModalService.onClickYes.subscribe((value) => {
+        if (value) {
+          this.handleYes();
+        }
+      });
   }
 
   onDelete(newsId: number) {
     this.deletedNewsId = newsId;
-    this.loadComponent();
-    // this.isOpenConfirmation = true;
-    // this.confirmationHeader = Constants.DELETE_HEADER;
-    // this.confirmationMessage = Constants.DELETE_MESSAGE;
-  }
 
-  loadComponent() {
-    const viewContainerRef = this.modalHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    const modalData = {
+    const modalData: ConfirmationModal = {
       title: Constants.DELETE_HEADER,
       content: Constants.DELETE_MESSAGE,
     };
-
-    const contentRef = viewContainerRef.createComponent(
-      ConfirmationModalComponent
+    this.confirmationModalService.loadConfirmationComponent(
+      this.modalHost,
+      modalData
     );
-    contentRef.instance.modalData = modalData;
-
-    // Get the response(Output Event) from the confirmation modal
-    contentRef.instance.closeModal.subscribe(() => {
-      contentRef.destroy();
-    });
-
-    contentRef.instance.onClickYes.subscribe(() => {
-      this.handleYes();
-      contentRef.destroy();
-    });
   }
 
   handleYes() {
-    // this.isOpenConfirmation = false;
     if (this.deletedNewsId) {
       this.newsService.deletedNewsId.next(this.deletedNewsId);
     }
     this.deletedNewsId = undefined;
   }
-
-  // handleDropdown(activeIndex: number) {
-  //   this.activeIndex = activeIndex;
-  //   this.isOpenDropdown = !this.isOpenDropdown;
-  // }
-
-  // changeSlide() {
-  //   if (this.activeIndex && this.activeIndex < 5) {
-  //     this.isOpenDropdown = false;
-  //   }
-  // }
 
   onSearch(searchText: string) {
     this.newsService.searchData.next(searchText);
@@ -100,5 +80,6 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.newsListSub.unsubscribe();
+    this.confirmationYesSub.unsubscribe();
   }
 }

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ConfirmationModal } from '../../models/common.model';
 
 @Component({
   selector: 'app-confirmation-modal',
@@ -6,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./confirmation-modal.component.scss'],
 })
 export class ConfirmationModalComponent {
-  @Input() modalData!: any;
+  @Input() modalData!: ConfirmationModal;
 
   @Output() closeModal = new EventEmitter<boolean>();
   @Output() onClickYes = new EventEmitter<boolean>();
@@ -16,6 +17,6 @@ export class ConfirmationModalComponent {
   }
 
   closedModal() {
-    this.closeModal.emit(false);
+    this.closeModal.emit();
   }
 }

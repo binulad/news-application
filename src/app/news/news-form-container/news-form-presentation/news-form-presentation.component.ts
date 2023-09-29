@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  FormGroup,
-  FormArray,
-  FormControl,
-  Validators,
-  Form,
-} from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Constants } from '../../news.constant';
 import { AddNews, Departments } from '../../news.model';
 import { NewsService } from '../../news.service';
+import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
+import { ConfirmationModal } from 'src/app/shared/models/common.model';
+import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-news-form-presentation',
   templateUrl: './news-form-presentation.component.html',
 })
-export class NewsFormPresentationComponent implements OnInit {
+export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   @ViewChild('uploadFile') uploadFileInput: any;
+  @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
 
   newsForm!: FormGroup;
   maxDate: Date = new Date();
@@ -28,11 +27,13 @@ export class NewsFormPresentationComponent implements OnInit {
   id!: number;
   isEdit: boolean = false;
   editNewsForm!: AddNews;
+  confirmationYesSub!: Subscription;
 
   constructor(
     private newsService: NewsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private confirmationModalService: ConfirmationModalService
   ) {
     this.minFromDate.setDate(this.maxDate.getDate() - 30);
   }
@@ -59,8 +60,14 @@ export class NewsFormPresentationComponent implements OnInit {
     } else {
       this.initNewsForm();
     }
-  }
 
+    this.confirmationYesSub =
+      this.confirmationModalService.onClickYes.subscribe((value) => {
+        if (value) {
+          this.router.navigate(['../'], { relativeTo: this.route });
+        }
+      });
+  }
   initNewsForm() {
     let subject = '';
     let fromDate = null;
@@ -226,5 +233,24 @@ export class NewsFormPresentationComponent implements OnInit {
   removeFile(index: number) {
     this.files.removeAt(index);
     this.selectedFiles.splice(index, 1);
+  }
+
+  onClickBack() {
+    if (this.newsForm.dirty) {
+      const modalData: ConfirmationModal = {
+        title: 'Confirmation Modal',
+        content: 'Are you sure you want to discard changes?',
+      };
+      this.confirmationModalService.loadConfirmationComponent(
+        this.modalHost,
+        modalData
+      );
+    } else {
+      this.router.navigate(['../'], { relativeTo: this.route });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.confirmationYesSub.unsubscribe();
   }
 }
