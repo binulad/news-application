@@ -28,6 +28,53 @@
           </li>
         </ul>
       </div>
+
+      <!-- OAuth Authentication -->
+      <div class="d-flex align-items-center">
+        <div class="dropdown user-profile" *ngIf="user">
+          <button
+            class="btn btn-link d-flex align-items-center text-dark text-decoration-none"
+            type="button"
+            appDropdown
+          >
+            <!-- #dropdown="dropdownDirective -->
+            <img
+              height="25"
+              width="25"
+              class="rounded-circle"
+              [src]="user.picture"
+              [alt]="user.name"
+            />
+            <span class="user-name fw-medium ls-0 ms-2">{{ user.name }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <!-- [class.show]="dropdown.isShow" -->
+            <li>
+              <a class="dropdown-item" (click)="onClickLogout()">Logout</a>
+            </li>
+          </ul>
+        </div>
+        <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+          <button
+            type="button"
+            class="btn btn-primary px-4"
+            (click)="onClickLogout()"
+          >
+            Log out
+          </button>
+        </ng-container>
+
+        <ng-template #loggedOut>
+          <button
+            type="button"
+            class="btn btn-primary px-4"
+            (click)="onClickLogin()"
+          >
+            Log in
+          </button>
+        </ng-template>
+      </div>
+      <!-- End: OAuth Authentication -->
     </div>
   </div>
 </nav>
