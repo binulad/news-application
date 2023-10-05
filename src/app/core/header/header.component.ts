@@ -1,23 +1,31 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { LoaderService } from '../loader/loader.service';
+import { AuthGuardService } from '../guards/auth-guard.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
-  user!: any;
-
   constructor(
     public auth: AuthService,
-    @Inject(DOCUMENT) public document: Document
+    @Inject(DOCUMENT) public document: Document,
+    private loaderService: LoaderService,
+    private authGuardService: AuthGuardService
   ) {}
 
   ngOnInit(): void {
-    this.auth.user$.subscribe((user) => {
-      console.log(user);
-      this.user = user;
+    this.auth.idTokenClaims$.subscribe((value) => {
+      console.log('idTokenClaims:: ', value);
+
+      // Set the IdToken value to local storage
+      this.authGuardService.setIdToken(value?.__raw);
+    });
+
+    this.auth.isLoading$.subscribe((value) => {
+      this.loaderService.displayLoader(value);
     });
   }
 
@@ -37,5 +45,6 @@ export class HeaderComponent implements OnInit {
         returnTo: this.document.location.origin,
       },
     });
+    this.authGuardService.clearSession();
   }
 }

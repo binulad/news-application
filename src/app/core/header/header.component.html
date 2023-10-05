@@ -31,13 +31,14 @@
 
       <!-- OAuth Authentication -->
       <div class="d-flex align-items-center">
-        <div class="dropdown user-profile" *ngIf="user">
+        <div class="dropdown user-profile" *ngIf="auth.user$ | async as user">
           <button
             class="btn btn-link d-flex align-items-center text-dark text-decoration-none"
             type="button"
             appDropdown
+            #dropdown="dropdownDirective"
           >
-            <!-- #dropdown="dropdownDirective -->
+            <!-- #dropdown="dropdownDirective" -->
             <img
               height="25"
               width="25"
@@ -47,14 +48,19 @@
             />
             <span class="user-name fw-medium ls-0 ms-2">{{ user.name }}</span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            [class.show]="dropdown.isShow"
+          >
             <!-- [class.show]="dropdown.isShow" -->
             <li>
-              <a class="dropdown-item" (click)="onClickLogout()">Logout</a>
+              <a class="dropdown-item cursor-pointer" (click)="onClickLogout()"
+                >Logout</a
+              >
             </li>
           </ul>
         </div>
-        <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+        <!-- <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
           <button
             type="button"
             class="btn btn-primary px-4"
@@ -62,7 +68,7 @@
           >
             Log out
           </button>
-        </ng-container>
+        </ng-container> -->
 
         <ng-template #loggedOut>
           <button
@@ -73,6 +79,16 @@
             Log in
           </button>
         </ng-template>
+
+        <ng-container *ngIf="!(auth.isAuthenticated$ | async)">
+          <button
+            type="button"
+            class="btn btn-primary px-4"
+            (click)="onClickLogin()"
+          >
+            Log in
+          </button>
+        </ng-container>
       </div>
       <!-- End: OAuth Authentication -->
     </div>

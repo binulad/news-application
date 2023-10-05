@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 
 import { AuthModule } from '@auth0/auth0-angular';
 
@@ -12,15 +10,15 @@ import { AppComponent } from './app.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CoreModule } from './core/core.module';
 import { AppShellComponent } from './app-shell/app-shell.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, AppShellComponent],
+  declarations: [AppComponent, AppShellComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    FormsModule,
     CoreModule,
     ModalModule.forRoot(),
     AuthModule.forRoot({

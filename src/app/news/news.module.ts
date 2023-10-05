@@ -11,7 +11,6 @@ import { NewsListContainerComponent } from './news-list-container/news-list-cont
 import { NewsListPresentationComponent } from './news-list-container/news-list-presentation/news-list-presentation.component';
 import { NewsDetailContainerComponent } from './news-detail-container/news-detail-container.component';
 import { NewsDetailPresentationComponent } from './news-detail-container/news-detail-presentation/news-detail-presentation.component';
-import { TextTruncatePipe } from '../shared/pipes/text-truncate.pipe';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SharedModule } from '../shared/shared.module';
 
@@ -24,7 +23,6 @@ import { SharedModule } from '../shared/shared.module';
     NewsListPresentationComponent,
     NewsDetailContainerComponent,
     NewsDetailPresentationComponent,
-    TextTruncatePipe,
   ],
   imports: [
     CommonModule,
