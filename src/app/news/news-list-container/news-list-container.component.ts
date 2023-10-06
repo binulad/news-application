@@ -13,8 +13,10 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
     q: '',
     sortBy: 'createdOn',
     direction: 'desc',
+    category: '',
   };
   searchNewsSub!: Subscription;
+  filterDepartmentSub!: Subscription;
 
   constructor(private newsService: NewsService) {}
 
@@ -36,6 +38,13 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.filterDepartmentSub = this.newsService.filterDepartment.subscribe(
+      (filterDepartment) => {
+        this.queryParams.category = filterDepartment;
+        this.getAllNews(this.queryParams);
+      }
+    );
   }
 
   /**
@@ -61,5 +70,6 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.deletedNewsSub.unsubscribe();
     this.searchNewsSub.unsubscribe();
+    this.filterDepartmentSub.unsubscribe();
   }
 }

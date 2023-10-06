@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { News } from '../../news.model';
+import { Departments, News } from '../../news.model';
 import { NewsService } from '../../news.service';
 import { Subscription } from 'rxjs';
 import { Constants } from '../../news.constant';
@@ -30,6 +30,8 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   newsListSub!: Subscription;
   deletedNewsId?: number;
   confirmationYesSub!: Subscription;
+  categoryList: Departments[] = Constants.DepartmentList;
+  selectedDepartment: any = 'All';
 
   constructor(
     private newsService: NewsService,
@@ -39,6 +41,9 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.newsListSub = this.newsService.newsList.subscribe((response) => {
       this.newsList = response;
+      this.getAvailableDepartment();
+
+      console.log('Categories::', this.categoryList);
     });
 
     this.confirmationYesSub =
@@ -47,6 +52,19 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
           this.handleYes();
         }
       });
+  }
+
+  /**
+   * This method called to filter the Available Departments from the List
+   */
+  getAvailableDepartment() {
+    this.newsList.map((news) => {
+      this.categoryList.filter((department) => {
+        if (department.id == +news.departmentOrWing) {
+          department.isAvailable = true;
+        }
+      });
+    });
   }
 
   /**
@@ -85,6 +103,21 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    */
   onSearch(searchText: string) {
     this.newsService.searchData.next(searchText);
+  }
+
+  /**
+   * This method called to filter the data by category
+   * @param categoryId Passed the categoryId
+   */
+  onClickCategory(categoryId: string | number | undefined) {
+    if (categoryId) {
+      this.selectedDepartment = this.categoryList.find(
+        (department: any) => department.id == categoryId
+      )?.name;
+    } else {
+      this.selectedDepartment = 'All';
+    }
+    this.newsService.filterDepartment.next(categoryId);
   }
 
   ngOnDestroy(): void {

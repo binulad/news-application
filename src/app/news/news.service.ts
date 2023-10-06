@@ -16,6 +16,7 @@ export class NewsService {
   public submitNews = new Subject<any>();
   public deletedNewsId = new Subject<number>();
   public searchData = new BehaviorSubject<string>('');
+  public filterDepartment = new Subject<string | number | undefined>();
 
   constructor(private http: HttpClient) {}
 
@@ -28,8 +29,14 @@ export class NewsService {
     const search = params.q;
     const sortBy = params.sortBy;
     const direction = params.direction;
+    let filter = params.category;
+    if (filter) {
+      filter = `&departmentOrWing=${filter}`;
+    }
     return this.http
-      .get<News[]>(`${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}`)
+      .get<News[]>(
+        `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}${filter}`
+      )
       .pipe(
         map((response: any) => {
           response.forEach((element: any) => {

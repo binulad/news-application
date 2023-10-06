@@ -1,9 +1,68 @@
 <!-- Action Area -->
-<div class="d-flex mb-2">
-  <!-- Add New Button -->
-  <div class="flex-shrink-0 ms-auto d-flex align-items-center">
+<div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+  <!-- Categories -->
+  <!-- <ul
+    *ngIf="categoryList?.length"
+    class="list-unstyled d-flex flex-wrap align-items-center mb-0 gap-2"
+  >
+    <li>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        [class.active]="selectedDepartment == ''"
+        (click)="onClickCategory('')"
+      >
+        All
+      </button>
+    </li>
+    <li *ngFor="let category of categoryList">
+      <button
+        class="btn btn-outline-primary btn-sm"
+        [class.active]="selectedDepartment == category?.id"
+        [disabled]="!category.isAvailable"
+        (click)="onClickCategory(category?.id)"
+      >
+        {{ category?.name }}
+      </button>
+    </li>
+  </ul> -->
+
+  <div class="d-flex align-items-center">
+    <span class="fw-medium">Filter By Department/Wing:</span>
+
+    <div class="btn-group ms-2">
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm dropdown-toggle"
+        appDropdown
+        #filterDropdown="dropdownDirective"
+      >
+        {{ selectedDepartment }}
+      </button>
+      <ul class="dropdown-menu" [class.show]="filterDropdown.isShow">
+        <li>
+          <a class="dropdown-item cursor-pointer" (click)="onClickCategory('')"
+            >All</a
+          >
+        </li>
+        <li *ngFor="let category of categoryList">
+          <a
+            class="dropdown-item cursor-pointer"
+            [class.disabled]="!category.isAvailable"
+            (click)="onClickCategory(category?.id)"
+            >{{ category?.name }}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- End: Categories -->
+
+  <!-- Search and Add New Button -->
+  <div
+    class="flex-sm-shrink-0 flex-sm-grow-0 flex-grow-1 ms-auto d-flex align-items-center"
+  >
     <!-- Search Block -->
-    <div class="search__block">
+    <div class="search__block flex-grow-1">
       <input
         class="form-control"
         type="text"
@@ -14,7 +73,10 @@
       />
     </div>
     <!-- End: Search Block -->
-    <a routerLink="new" class="btn btn-primary d-flex align-items-center ms-2">
+    <a
+      routerLink="new"
+      class="btn btn-primary flex-shrink-0 d-flex align-items-center ms-2"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -31,7 +93,7 @@
       Add New
     </a>
   </div>
-  <!-- End: Add New Button -->
+  <!-- End: Search and Add New Button -->
 </div>
 <!-- End: Action Area -->
 
