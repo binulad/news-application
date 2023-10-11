@@ -126,11 +126,24 @@
             *ngFor="let file of newsDetails.files; let i = index"
           >
             <div class="view-large-img rounded-top">
-              <img
-                [src]="file.fileURL"
-                [alt]="file.fileName"
-                class="selected-img rounded-top"
-              />
+              <ng-container *ngIf="file.fileName !== 'Video'; else elseBlock">
+                <img
+                  [src]="file.fileURL"
+                  [alt]="file.fileName"
+                  class="selected-img rounded-top"
+              /></ng-container>
+              <ng-template #elseBlock>
+                <iframe
+                  class="rounded-top"
+                  width="100%"
+                  height="100"
+                  [src]="file.fileURL"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                >
+                </iframe>
+              </ng-template>
+
               <a
                 class="view-img-link top-0 start-0 d-flex align-items-center justify-content-center h-100 w-100"
                 (click)="openModal(i)"
@@ -181,7 +194,12 @@
         [interval]="0"
       >
         <slide *ngFor="let file of newsDetails.files">
-          <img [src]="file.fileURL" class="w-100" [alt]="file.fileName" />
+          <ng-container *ngIf="file.fileName !== 'Video'; else elseBlock">
+            <img [src]="file.fileURL" class="w-100" [alt]="file.fileName"
+          /></ng-container>
+          <ng-template #elseBlock>
+            <iframe width="100%" height="100%" [src]="file.fileURL"> </iframe>
+          </ng-template>
           <p class="mb-0 mt-2">{{ file.fileDescription }}</p>
         </slide>
       </carousel>

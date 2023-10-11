@@ -1,31 +1,6 @@
 <!-- Action Area -->
 <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
   <!-- Categories -->
-  <!-- <ul
-    *ngIf="categoryList?.length"
-    class="list-unstyled d-flex flex-wrap align-items-center mb-0 gap-2"
-  >
-    <li>
-      <button
-        class="btn btn-outline-primary btn-sm"
-        [class.active]="selectedDepartment == ''"
-        (click)="onClickCategory('')"
-      >
-        All
-      </button>
-    </li>
-    <li *ngFor="let category of categoryList">
-      <button
-        class="btn btn-outline-primary btn-sm"
-        [class.active]="selectedDepartment == category?.id"
-        [disabled]="!category.isAvailable"
-        (click)="onClickCategory(category?.id)"
-      >
-        {{ category?.name }}
-      </button>
-    </li>
-  </ul> -->
-
   <div class="d-flex align-items-center">
     <span class="fw-medium">Filter By Department/Wing:</span>
 
@@ -100,8 +75,7 @@
 <!-- News Card Listing -->
 <div class="grid gap-2" *ngIf="newsList.length">
   <div class="g-col-xl-4 g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
-    <!-- (activeSlideChange)="changeSlide()" -->
-    <carousel>
+    <carousel [interval]="0">
       <h5 class="position-absolute top-0 start-0 z-1 text-white mt-2 ms-3">
         Latest News
       </h5>
@@ -122,6 +96,19 @@
               [src]="news.files && news.files[0].fileURL"
               [alt]="news.files && news.files[0].fileName"
             />
+            <!-- Video -->
+            <iframe
+              *ngIf="
+                news.files?.length &&
+                news.files &&
+                news.files[0].fileName == 'Video'
+              "
+              width="100%"
+              height="350"
+              src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1"
+            >
+              <!-- [src]="news.files[0].fileURL | safe" -->
+            </iframe>
             <div
               class="position-absolute rounded top-0 start-0 h-100 w-100 bg-dark bg-opacity-75"
             ></div>
@@ -241,7 +228,7 @@
             </ul>
           </div> -->
 
-          <!-- Directive -->
+          <!-- Dropdown Directive -->
           <div class="flex-shrink-0 btn-group dropup">
             <button
               type="button"

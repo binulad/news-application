@@ -13,6 +13,7 @@ import { NewsDetailContainerComponent } from './news-detail-container/news-detai
 import { NewsDetailPresentationComponent } from './news-detail-container/news-detail-presentation/news-detail-presentation.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SharedModule } from '../shared/shared.module';
+import { SafePipe } from '../common/pipes/safe.pipe';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SharedModule } from '../shared/shared.module';
     NewsListPresentationComponent,
     NewsDetailContainerComponent,
     NewsDetailPresentationComponent,
+    SafePipe,
   ],
   imports: [
     CommonModule,

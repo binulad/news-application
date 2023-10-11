@@ -8,6 +8,11 @@ import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directi
 import { ConfirmationModal } from 'src/app/shared/models/common.model';
 import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
 import { Subscription } from 'rxjs';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl,
+} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-news-form-presentation',
@@ -15,6 +20,8 @@ import { Subscription } from 'rxjs';
 })
 export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   @ViewChild('uploadFile') uploadFileInput: any;
+  @ViewChild('videoLink') uploadVideoLink: any;
+
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
 
   newsForm!: FormGroup;
@@ -32,7 +39,8 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     private newsService: NewsService,
     private router: Router,
     private route: ActivatedRoute,
-    private confirmationModalService: ConfirmationModalService
+    private confirmationModalService: ConfirmationModalService,
+    private sanitizer: DomSanitizer
   ) {
     this.minFromDate.setDate(this.maxDate.getDate() - 30);
   }
@@ -66,12 +74,18 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
       this.initNewsForm();
     }
 
+    debugger;
+
     this.confirmationYesSub =
       this.confirmationModalService.onClickYes.subscribe((value) => {
+        console.log('confirmationModalService', value);
+
         if (value) {
-          this.router.navigate(['../'], { relativeTo: this.route });
+          this.router.navigate(['/news']);
         }
       });
+
+    console.log('confirmationYesSub', this.confirmationYesSub);
   }
 
   /**
@@ -122,6 +136,8 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
           );
         }
         this.selectedFiles = [...this.editNewsForm.files];
+
+        // console.log('selectedFiles:: ', this.selectedFiles[0].fileURL);
       }
     }
 
@@ -161,7 +177,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
    */
   createFileGroup(
     fileName?: string,
-    fileURL?: string,
+    fileURL?: string | SafeResourceUrl,
     fileDescription?: string
   ): FormGroup {
     return new FormGroup({
@@ -252,6 +268,8 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
         // All files have been converted, you can now push them to the FormArray
         this.selectedFiles.push(...files);
         this.uploadFileInput.nativeElement.value = '';
+
+        console.log('this.selectedFiles:: ', this.selectedFiles);
       })
       .catch((error) => {
         console.error('Error converting files:', error);
@@ -304,8 +322,21 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
         modalData
       );
     } else {
-      this.router.navigate(['../'], { relativeTo: this.route });
+      this.router.navigate(['/news']);
     }
+  }
+
+  addVideo() {
+    const videoURL: string = this.uploadVideoLink.nativeElement.value;
+
+    // const trustedVideoURL: SafeResourceUrl =
+    //   this.sanitizer.bypassSecurityTrustResourceUrl(videoURL);
+
+    this.files.push(this.createFileGroup('Video', videoURL, ''));
+
+    console.log('videoLink: ', this.files);
+    this.selectedFiles.push(...this.files.value);
+    this.uploadVideoLink.nativeElement.value = '';
   }
 
   ngOnDestroy(): void {
