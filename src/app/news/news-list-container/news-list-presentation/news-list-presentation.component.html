@@ -1,9 +1,43 @@
 <!-- Action Area -->
-<div class="d-flex mb-2">
-  <!-- Add New Button -->
-  <div class="flex-shrink-0 ms-auto d-flex align-items-center">
+<div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+  <!-- Categories -->
+  <div class="d-flex align-items-center">
+    <span class="fw-medium">Filter By Department/Wing:</span>
+
+    <div class="btn-group ms-2">
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm dropdown-toggle"
+        appDropdown
+        #filterDropdown="dropdownDirective"
+      >
+        {{ selectedDepartment }}
+      </button>
+      <ul class="dropdown-menu" [class.show]="filterDropdown.isShow">
+        <li>
+          <a class="dropdown-item cursor-pointer" (click)="onClickCategory('')"
+            >All</a
+          >
+        </li>
+        <li *ngFor="let category of categoryList">
+          <a
+            class="dropdown-item cursor-pointer"
+            [class.disabled]="!category.isAvailable"
+            (click)="onClickCategory(category?.id)"
+            >{{ category?.name }}</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- End: Categories -->
+
+  <!-- Search and Add New Button -->
+  <div
+    class="flex-sm-shrink-0 flex-sm-grow-0 flex-grow-1 ms-auto d-flex align-items-center"
+  >
     <!-- Search Block -->
-    <div class="search__block">
+    <div class="search__block flex-grow-1">
       <input
         class="form-control"
         type="text"
@@ -14,7 +48,10 @@
       />
     </div>
     <!-- End: Search Block -->
-    <a routerLink="new" class="btn btn-primary d-flex align-items-center ms-2">
+    <a
+      routerLink="new"
+      class="btn btn-primary flex-shrink-0 d-flex align-items-center ms-2"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -31,15 +68,14 @@
       Add New
     </a>
   </div>
-  <!-- End: Add New Button -->
+  <!-- End: Search and Add New Button -->
 </div>
 <!-- End: Action Area -->
 
 <!-- News Card Listing -->
 <div class="grid gap-2" *ngIf="newsList.length">
   <div class="g-col-xl-4 g-col-lg-6 g-col-sm-8 g-col-12 news__carousel">
-    <!-- (activeSlideChange)="changeSlide()" -->
-    <carousel>
+    <carousel [interval]="0">
       <h5 class="position-absolute top-0 start-0 z-1 text-white mt-2 ms-3">
         Latest News
       </h5>
@@ -60,6 +96,19 @@
               [src]="news.files && news.files[0].fileURL"
               [alt]="news.files && news.files[0].fileName"
             />
+            <!-- Video -->
+            <iframe
+              *ngIf="
+                news.files?.length &&
+                news.files &&
+                news.files[0].fileName == 'Video'
+              "
+              width="100%"
+              height="350"
+              src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1"
+            >
+              <!-- [src]="news.files[0].fileURL | safe" -->
+            </iframe>
             <div
               class="position-absolute rounded top-0 start-0 h-100 w-100 bg-dark bg-opacity-75"
             ></div>
@@ -179,7 +228,7 @@
             </ul>
           </div> -->
 
-          <!-- Directive -->
+          <!-- Dropdown Directive -->
           <div class="flex-shrink-0 btn-group dropup">
             <button
               type="button"

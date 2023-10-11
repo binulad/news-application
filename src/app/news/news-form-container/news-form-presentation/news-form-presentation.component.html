@@ -322,13 +322,36 @@
     <div class="card mt-3" formArrayName="files">
       <div class="card-header d-flex align-items-center">Attachments</div>
       <div class="card-body">
-        <input
-          class="form-control"
-          type="file"
-          #uploadFile
-          multiple
-          (change)="onFileChange($event)"
-        />
+        <div class="row g-2">
+          <div class="col-sm-6">
+            <input
+              class="form-control"
+              type="file"
+              #uploadFile
+              multiple
+              (change)="onFileChange($event)"
+            />
+          </div>
+          <div class="col-sm-6">
+            <!-- Add Video Links -->
+            <div class="d-flex align-items-center">
+              <input
+                class="form-control"
+                type="text"
+                placeholder="Add YouTube embed video link"
+                #videoLink
+              />
+              <button
+                type="button"
+                class="btn btn-primary flex-shrink-0 ms-2"
+                (click)="addVideo()"
+              >
+                Add Video
+              </button>
+            </div>
+            <!-- End: Add Video Links -->
+          </div>
+        </div>
         <ul
           class="list-unstyled mt-3 mb-0 row g-3"
           *ngIf="selectedFiles.length"
@@ -339,13 +362,26 @@
             [formGroupName]="i"
           >
             <div class="position-relative">
-              <figure class="figure d-block m-0">
-                <img
-                  [src]="file.fileURL"
-                  [alt]="file.fileName"
-                  class="figure-img selected-img rounded mb-1"
-                />
-              </figure>
+              {{ file.fileName != "Video" }}
+              <ng-container *ngIf="file.fileName != 'Video'; else elseBlock">
+                <figure class="figure d-block m-0">
+                  <img
+                    [src]="file.fileURL"
+                    [alt]="file.fileName"
+                    class="figure-img selected-img rounded mb-1"
+                  />
+                </figure>
+              </ng-container>
+              <ng-template #elseBlock>
+                <!-- {{ file | json }} -->
+                <iframe
+                  class="rounded"
+                  width="100%"
+                  height="100"
+                  [src]="file.fileURL | safe"
+                >
+                </iframe>
+              </ng-template>
               <textarea
                 rows="3"
                 class="form-control"

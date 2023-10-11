@@ -54,15 +54,23 @@ export interface uploadFiles {
 export interface Departments {
   id: number;
   name: string;
+  isAvailable?: boolean;
 }
 
 export class QueryParams {
   q: string;
   sortBy: string;
   direction: string;
-  constructor(q: string, sortBy: string, direction: string) {
+  category: string | undefined | number;
+  constructor(
+    q: string,
+    sortBy: string,
+    direction: string,
+    category: string | undefined | number
+  ) {
     this.q = q || '';
     this.sortBy = sortBy || 'createdOn';
     this.direction = direction || 'desc';
+    this.category = category || undefined;
   }
 }
