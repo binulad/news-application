@@ -90,7 +90,11 @@
               height="350"
             />
             <img
-              *ngIf="news.files?.length"
+              *ngIf="
+                news.files?.length &&
+                news.files &&
+                news.files[0].fileName != 'Video'
+              "
               class="rounded d-block"
               height="350"
               [src]="news.files && news.files[0].fileURL"
@@ -105,9 +109,9 @@
               "
               width="100%"
               height="350"
-              src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1"
+              title="Video Iframe"
+              [src]="news.files[0].fileURL | safe"
             >
-              <!-- [src]="news.files[0].fileURL | safe" -->
             </iframe>
             <div
               class="position-absolute rounded top-0 start-0 h-100 w-100 bg-dark bg-opacity-75"
@@ -192,42 +196,6 @@
             >{{ news.centerDetails.district }} - {{ news.createdOn }}</small
           >
 
-          <!-- <div class="flex-shrink-0 btn-group dropup">
-            <button type="button" class="btn btn-link" (click)="handleDropdown(i + 5)">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-three-dots-vertical"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                />
-              </svg>
-            </button>
-            <ul
-              class="dropdown-menu dropdown-menu-end show"
-              *ngIf="isOpenDropdown && activeIndex == i + 5"
-              @openClose
-            >
-              <li>
-                <a class="dropdown-item" [routerLink]="['edit', news.id]"
-                  >Edit</a
-                >
-              </li>
-              <li>
-                <a
-                  type="button"
-                  (click)="onDelete(news.id)"
-                  class="dropdown-item"
-                  >Delete</a
-                >
-              </li>
-            </ul>
-          </div> -->
-
           <!-- Dropdown Directive -->
           <div class="flex-shrink-0 btn-group dropup">
             <button
@@ -286,17 +254,6 @@
   <p class="text-center mb-0">No Record Found</p>
 </div>
 <!-- News Card Listing -->
-
-<!-- Conformation Modal -->
-<!-- <app-confirmation-modal
-  *ngIf="isOpenConfirmation"
-  (closeModal)="isOpenConfirmation = $event"
-  (onClickYes)="handleYes()"
->
-  <span modalHeader>{{ confirmationHeader }}</span>
-  <p class="mb-0">{{ confirmationMessage }}</p>
-</app-confirmation-modal> -->
-<!-- End: Conformation Modal -->
 
 <!-- Dynamically Load Confirmation Modal -->
 <ng-template appModalHost></ng-template>
