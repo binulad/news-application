@@ -8,11 +8,7 @@ import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directi
 import { ConfirmationModal } from 'src/app/shared/models/common.model';
 import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
 import { Subscription } from 'rxjs';
-import {
-  DomSanitizer,
-  SafeResourceUrl,
-  SafeUrl,
-} from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-news-form-presentation',
@@ -74,8 +70,6 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
       this.initNewsForm();
     }
 
-    debugger;
-
     this.confirmationYesSub =
       this.confirmationModalService.onClickYes.subscribe((value) => {
         console.log('confirmationModalService', value);
@@ -101,7 +95,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     let departmentOrWing = null;
     let newsDescription = '';
     let guestDetails: any[] = [];
-    let centerDetails = Object.assign({});
+    let centerDetails = {} as any;
     let files: any[] = [];
 
     if (this.isEdit) {
@@ -124,7 +118,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
           );
         }
       }
-      centerDetails = Object.assign({}, this.editNewsForm.centerDetails);
+      centerDetails = { ...this.editNewsForm.centerDetails };
       if (this.editNewsForm.files) {
         for (const file of this.editNewsForm.files) {
           files.push(
@@ -136,8 +130,6 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
           );
         }
         this.selectedFiles = [...this.editNewsForm.files];
-
-        // console.log('selectedFiles:: ', this.selectedFiles[0].fileURL);
       }
     }
 
@@ -213,7 +205,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
    * @returns Return the boolean value
    */
   validateField(fieldName: string, formArray?: any) {
-    const fromGroup = formArray ? formArray : this.newsForm;
+    const fromGroup = formArray || this.newsForm;
     return (
       !fromGroup.get(fieldName)?.valid && fromGroup.get(fieldName)?.touched
     );
@@ -287,13 +279,12 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = () => {
         file.fileURL = reader.result;
-        // Assuming 'files' is a FormArray in your 'newsForm'
-        const filesFormArray = this.newsForm.get('files') as FormArray;
-        filesFormArray.push(this.createFileGroup(file.name, file.fileURL, ''));
+
+        this.files.push(this.createFileGroup(file.name, file.fileURL, ''));
         resolve(reader.result);
       };
-      reader.onerror = () => {
-        reject();
+      reader.onerror = (error) => {
+        reject(error);
       };
     });
   }
@@ -329,13 +320,11 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   addVideo() {
     const videoURL: string = this.uploadVideoLink.nativeElement.value;
 
-    // const trustedVideoURL: SafeResourceUrl =
-    //   this.sanitizer.bypassSecurityTrustResourceUrl(videoURL);
+    const videoGroup = this.createFileGroup('Video', videoURL, '');
 
-    this.files.push(this.createFileGroup('Video', videoURL, ''));
+    this.files.push(videoGroup);
 
-    console.log('videoLink: ', this.files);
-    this.selectedFiles.push(...this.files.value);
+    this.selectedFiles.push(videoGroup.value);
     this.uploadVideoLink.nativeElement.value = '';
   }
 
