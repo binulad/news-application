@@ -225,8 +225,7 @@ export class NewsFormPresentationComponent implements OnInit {
       this.newsFormService.createFileGroup('Video', videoURL, '')
     );
 
-    console.log('videoLink: ', this.files);
-    this.selectedFiles.push(...this.files.value);
+    this.selectedFiles.push(videoGroup.value);
     this.uploadVideoLink.nativeElement.value = '';
   }
 }

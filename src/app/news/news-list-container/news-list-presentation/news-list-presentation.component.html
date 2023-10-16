@@ -90,7 +90,11 @@
               height="350"
             />
             <img
-              *ngIf="news.files?.length"
+              *ngIf="
+                news.files?.length &&
+                news.files &&
+                news.files[0].fileName != 'Video'
+              "
               class="rounded d-block"
               height="350"
               [src]="news.files && news.files[0].fileURL"

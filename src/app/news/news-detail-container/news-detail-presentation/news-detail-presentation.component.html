@@ -137,7 +137,8 @@
                   class="rounded-top"
                   width="100%"
                   height="100"
-                  [src]="file.fileURL"
+                  [src]="file.fileURL | safe"
+                  title="Video Iframe"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 >
@@ -198,7 +199,14 @@
             <img [src]="file.fileURL" class="w-100" [alt]="file.fileName"
           /></ng-container>
           <ng-template #elseBlock>
-            <iframe width="100%" height="100%" [src]="file.fileURL"> </iframe>
+            <iframe
+              width="100%"
+              height="400"
+              title="Video Iframe"
+              [src]="file.fileURL | safe"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            >
+            </iframe>
           </ng-template>
           <p class="mb-0 mt-2">{{ file.fileDescription }}</p>
         </slide>
