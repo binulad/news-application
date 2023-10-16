@@ -14,6 +14,7 @@ import { NewsDetailPresentationComponent } from './news-detail-container/news-de
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SharedModule } from '../shared/shared.module';
 import { SafePipe } from '../common/pipes/safe.pipe';
+import { NewsPresenterService } from './news-form-container/news-form-presenter/news-form.presenter';
 
 @NgModule({
   declarations: [
@@ -36,5 +37,6 @@ import { SafePipe } from '../common/pipes/safe.pipe';
     SharedModule,
     FormsModule,
   ],
+  providers: [NewsPresenterService],
 })
 export class NewsModule {}
