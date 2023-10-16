@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ModalHostDirective } from '../../directives/modal-host.directive';
 import { ConfirmationModal } from '../../models/common.model';
 import { ConfirmationModalComponent } from './confirmation-modal.component';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

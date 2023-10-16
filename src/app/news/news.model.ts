@@ -1,18 +1,20 @@
-export interface News {
-  id: number;
-  subject: string | '';
-  fromDate: string;
-  toDate: string;
-  days: number;
-  noOfPeople: number;
-  anchorName: string;
-  departmentOrWing: string;
-  newsDescription: string;
-  guestDetails: ChiefGuests[];
-  centerDetails: CenterDetails;
-  files?: uploadFiles[];
-  createdOn?: string;
-  updatedOn?: string;
+export class News {
+  constructor(
+    public id: number,
+    public subject: string,
+    public fromDate: string,
+    public toDate: string,
+    public days: number,
+    public noOfPeople: number,
+    public anchorName: string,
+    public departmentOrWing: string,
+    public newsDescription: string,
+    public guestDetails: ChiefGuests[],
+    public centerDetails: CenterDetails,
+    public files?: UploadFiles[],
+    public createdOn?: string,
+    public updatedOn?: string
+  ) {}
 }
 
 export interface AddNews {
@@ -26,7 +28,7 @@ export interface AddNews {
   newsDescription: string;
   guestDetails: ChiefGuests[];
   centerDetails: CenterDetails;
-  files?: uploadFiles[];
+  files?: UploadFiles[];
   createdOn?: string;
   updatedOn?: string;
 }
@@ -45,7 +47,7 @@ export interface ChiefGuests {
   speechDescription?: string;
 }
 
-export interface uploadFiles {
+export interface UploadFiles {
   fileName: string;
   fileURL: string;
   fileDescription?: string;
@@ -71,6 +73,6 @@ export class QueryParams {
     this.q = q || '';
     this.sortBy = sortBy || 'createdOn';
     this.direction = direction || 'desc';
-    this.category = category || undefined;
+    this.category = category;
   }
 }

@@ -4,6 +4,7 @@ import { NewsComponent } from './news.component';
 import { NewsFormContainerComponent } from './news-form-container/news-form-container.component';
 import { NewsListContainerComponent } from './news-list-container/news-list-container.component';
 import { NewsDetailContainerComponent } from './news-detail-container/news-detail-container.component';
+import { deactivateGuard } from '../core/guards/deactivate-guard.guard';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
       {
         path: 'new',
         component: NewsFormContainerComponent,
+        canDeactivate: [deactivateGuard],
       },
       {
         path: ':id',
@@ -25,6 +27,7 @@ const routes: Routes = [
       {
         path: 'edit/:id',
         component: NewsFormContainerComponent,
+        canDeactivate: [deactivateGuard],
       },
     ],
   },

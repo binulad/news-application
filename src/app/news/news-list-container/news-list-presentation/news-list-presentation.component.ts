@@ -42,8 +42,6 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
     this.newsListSub = this.newsService.newsList.subscribe((response) => {
       this.newsList = response;
       this.getAvailableDepartment();
-
-      console.log('Categories::', this.categoryList);
     });
 
     this.confirmationYesSub =
@@ -58,8 +56,8 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    * This method called to filter the Available Departments from the List
    */
   getAvailableDepartment() {
-    this.newsList.map((news) => {
-      this.categoryList.filter((department) => {
+    this.newsList.forEach((news) => {
+      return this.categoryList.filter((department) => {
         if (department.id == +news.departmentOrWing) {
           department.isAvailable = true;
         }

@@ -1,30 +1,29 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { FormGroup, FormArray, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Constants } from '../../news.constant';
-import { AddNews, Departments } from '../../news.model';
+import { Departments, News } from '../../news.model';
 import { NewsService } from '../../news.service';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
-import { ConfirmationModal } from 'src/app/shared/models/common.model';
-import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
-import { Subscription } from 'rxjs';
-import {
-  DomSanitizer,
-  SafeResourceUrl,
-  SafeUrl,
-} from '@angular/platform-browser';
+import { NewsPresenterService } from '../news-form-presenter/news-form.presenter';
 
 @Component({
   selector: 'app-news-form-presentation',
   templateUrl: './news-form-presentation.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsFormPresentationComponent implements OnInit, OnDestroy {
+export class NewsFormPresentationComponent implements OnInit {
   @ViewChild('uploadFile') uploadFileInput: any;
   @ViewChild('videoLink') uploadVideoLink: any;
 
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
 
-  newsForm!: FormGroup;
+  newsForm!: UntypedFormGroup;
   maxDate: Date = new Date();
   minFromDate: Date = new Date();
   minToDate!: Date;
@@ -32,15 +31,13 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   selectedFiles: any[] = [];
   id!: number;
   isEdit: boolean = false;
-  editNewsForm!: AddNews;
-  confirmationYesSub!: Subscription;
+  editNewsForm!: any;
+  initialValue!: News;
 
   constructor(
     private newsService: NewsService,
-    private router: Router,
     private route: ActivatedRoute,
-    private confirmationModalService: ConfirmationModalService,
-    private sanitizer: DomSanitizer
+    private newsFormService: NewsPresenterService
   ) {
     this.minFromDate.setDate(this.maxDate.getDate() - 30);
   }
@@ -65,145 +62,58 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
       this.isEdit = !!this.id;
     });
 
+    this.newsForm = this.newsFormService.createNewsForm();
+
     if (this.isEdit) {
       this.newsService.getNews.subscribe((response) => {
         this.editNewsForm = response;
-        this.initNewsForm();
+
+        this.newsForm.patchValue({ ...this.editNewsForm });
+        this.getGuestDetails();
+        this.getAllFiles();
+
+        this.initialValue = this.newsForm.value;
       });
-    } else {
-      this.initNewsForm();
     }
 
-    debugger;
-
-    this.confirmationYesSub =
-      this.confirmationModalService.onClickYes.subscribe((value) => {
-        console.log('confirmationModalService', value);
-
-        if (value) {
-          this.router.navigate(['/news']);
-        }
-      });
-
-    console.log('confirmationYesSub', this.confirmationYesSub);
+    this.newsForm.valueChanges.subscribe((updatedValue: any) => {
+      const isValueUpdated =
+        JSON.stringify(this.initialValue) !== JSON.stringify(updatedValue);
+      if (this.newsForm.dirty) {
+        this.newsFormService.isFormUpdated$.next(isValueUpdated);
+      } else {
+        this.newsFormService.isFormUpdated$.next(false);
+      }
+    });
   }
 
-  /**
-   * This method called to set the initial value of the newsForm
-   */
-  initNewsForm() {
-    let subject = '';
-    let fromDate = null;
-    let toDate = null;
-    let days = null;
-    let noOfPeople = null;
-    let anchorName = '';
-    let departmentOrWing = null;
-    let newsDescription = '';
-    let guestDetails: any[] = [];
-    let centerDetails = Object.assign({});
-    let files: any[] = [];
-
-    if (this.isEdit) {
-      subject = this.editNewsForm.subject;
-      fromDate = new Date(this.editNewsForm.fromDate);
-      toDate = new Date(this.editNewsForm.toDate);
-      days = this.editNewsForm.days;
-      noOfPeople = this.editNewsForm.noOfPeople;
-      anchorName = this.editNewsForm.anchorName;
-      departmentOrWing = this.editNewsForm.departmentOrWing;
-      newsDescription = this.editNewsForm.newsDescription;
-      if (this.editNewsForm.guestDetails) {
-        for (const guest of this.editNewsForm.guestDetails) {
-          guestDetails.push(
-            this.createGuestFormGroup(
-              guest.guestName,
-              guest.identification,
-              guest.speechDescription
-            )
-          );
-        }
-      }
-      centerDetails = Object.assign({}, this.editNewsForm.centerDetails);
-      if (this.editNewsForm.files) {
-        for (const file of this.editNewsForm.files) {
-          files.push(
-            this.createFileGroup(
-              file.fileName,
-              file.fileURL,
-              file.fileDescription
-            )
-          );
-        }
-        this.selectedFiles = [...this.editNewsForm.files];
-
-        // console.log('selectedFiles:: ', this.selectedFiles[0].fileURL);
+  getGuestDetails() {
+    if (this.editNewsForm.guestDetails) {
+      for (const guest of this.editNewsForm.guestDetails) {
+        this.guestDetails.push(
+          this.newsFormService.createGuestFormGroup(
+            guest.guestName,
+            guest.identification,
+            guest.speechDescription
+          )
+        );
       }
     }
-
-    this.newsForm = new FormGroup({
-      subject: new FormControl(subject, Validators.required),
-      fromDate: new FormControl(fromDate, Validators.required),
-      toDate: new FormControl(toDate, Validators.required),
-      days: new FormControl(days, Validators.required),
-      noOfPeople: new FormControl(noOfPeople, Validators.required),
-      anchorName: new FormControl(anchorName, Validators.required),
-      departmentOrWing: new FormControl(departmentOrWing),
-      newsDescription: new FormControl(newsDescription, Validators.required),
-      guestDetails: new FormArray(guestDetails),
-      centerDetails: new FormGroup({
-        centreName: new FormControl(
-          centerDetails.centreName,
-          Validators.required
-        ),
-        centreIncharge: new FormControl(
-          centerDetails.centreIncharge,
-          Validators.required
-        ),
-        zoneName: new FormControl(centerDetails.zoneName, Validators.required),
-        district: new FormControl(centerDetails.district, Validators.required),
-        areaName: new FormControl(centerDetails.areaName, Validators.required),
-      }),
-      files: new FormArray(files),
-    });
   }
 
-  /**
-   * This method called to create the FileGroup Array
-   * @param fileName Passed the file name
-   * @param fileURL Passed the file url
-   * @param fileDescription Passed the file description
-   * @returns Return a FormGroup
-   */
-  createFileGroup(
-    fileName?: string,
-    fileURL?: string | SafeResourceUrl,
-    fileDescription?: string
-  ): FormGroup {
-    return new FormGroup({
-      fileName: new FormControl(fileName),
-      fileURL: new FormControl(fileURL),
-      fileDescription: new FormControl(fileDescription),
-    });
-  }
-
-  /**
-   * This method called to get the Form Group of Guest Array
-   * @param guestName Passed the guest name
-   * @param identification Passed the identification of the guest
-   * @param speechDescription Passed the speechDescription of the guest
-   * @returns Return a FormGroup
-   */
-  createGuestFormGroup(
-    guestName?: string,
-    identification?: string,
-    speechDescription?: string
-  ): FormGroup {
-    return new FormGroup({
-      guestName: new FormControl(guestName, Validators.required),
-      identification: new FormControl(identification, Validators.required),
-      speechDescription: new FormControl(speechDescription),
-    });
+  getAllFiles() {
+    if (this.editNewsForm.files) {
+      for (const file of this.editNewsForm.files) {
+        this.files.push(
+          this.newsFormService.createFileGroup(
+            file.fileName,
+            file.fileURL,
+            file.fileDescription
+          )
+        );
+      }
+      this.selectedFiles = [...this.editNewsForm.files];
+    }
   }
 
   /**
@@ -213,7 +123,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
    * @returns Return the boolean value
    */
   validateField(fieldName: string, formArray?: any) {
-    const fromGroup = formArray ? formArray : this.newsForm;
+    const fromGroup = formArray ?? this.newsForm;
     return (
       !fromGroup.get(fieldName)?.valid && fromGroup.get(fieldName)?.touched
     );
@@ -223,7 +133,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
    * This method called while add a new guest
    */
   onAddNewGuest() {
-    this.guestDetails.push(this.createGuestFormGroup());
+    this.guestDetails.push(this.newsFormService.createGuestFormGroup());
   }
 
   /**
@@ -245,6 +155,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     newsData.value['updatedOn'] = this.isEdit ? new Date() : null;
 
     this.newsService.submitNews.next(newsData.value);
+    this.newsFormService.isFormUpdated$.next(false);
   }
 
   /**
@@ -268,8 +179,6 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
         // All files have been converted, you can now push them to the FormArray
         this.selectedFiles.push(...files);
         this.uploadFileInput.nativeElement.value = '';
-
-        console.log('this.selectedFiles:: ', this.selectedFiles);
       })
       .catch((error) => {
         console.error('Error converting files:', error);
@@ -289,11 +198,13 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
         file.fileURL = reader.result;
         // Assuming 'files' is a FormArray in your 'newsForm'
         const filesFormArray = this.newsForm.get('files') as FormArray;
-        filesFormArray.push(this.createFileGroup(file.name, file.fileURL, ''));
+        filesFormArray.push(
+          this.newsFormService.createFileGroup(file.name, file.fileURL, '')
+        );
         resolve(reader.result);
       };
-      reader.onerror = () => {
-        reject();
+      reader.onerror = (error) => {
+        reject(error);
       };
     });
   }
@@ -307,39 +218,15 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     this.selectedFiles.splice(index, 1);
   }
 
-  /**
-   * This method called while click on the back button
-   * If the newsForm data is updated then open the confirmation modal
-   */
-  onClickBack() {
-    if (this.newsForm.dirty) {
-      const modalData: ConfirmationModal = {
-        title: 'Confirmation Modal',
-        content: 'Are you sure you want to discard changes?',
-      };
-      this.confirmationModalService.loadConfirmationComponent(
-        this.modalHost,
-        modalData
-      );
-    } else {
-      this.router.navigate(['/news']);
-    }
-  }
-
   addVideo() {
     const videoURL: string = this.uploadVideoLink.nativeElement.value;
 
-    // const trustedVideoURL: SafeResourceUrl =
-    //   this.sanitizer.bypassSecurityTrustResourceUrl(videoURL);
-
-    this.files.push(this.createFileGroup('Video', videoURL, ''));
+    this.files.push(
+      this.newsFormService.createFileGroup('Video', videoURL, '')
+    );
 
     console.log('videoLink: ', this.files);
     this.selectedFiles.push(...this.files.value);
     this.uploadVideoLink.nativeElement.value = '';
-  }
-
-  ngOnDestroy(): void {
-    this.confirmationYesSub.unsubscribe();
   }
 }

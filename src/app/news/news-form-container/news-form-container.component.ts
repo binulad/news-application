@@ -1,14 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NewsService } from '../news.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { ConfirmationModal } from 'src/app/shared/models/common.model';
+import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
+import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
+import { IDeactivateComponent } from 'src/app/common/models/common.model';
+import { NewsPresenterService } from './news-form-presenter/news-form.presenter';
+import { CommonConstant } from 'src/app/common/constants/common.constant';
 
 @Component({
   selector: 'app-news-form-container',
   templateUrl: './news-form-container.component.html',
 })
-export class NewsFormContainerComponent implements OnInit, OnDestroy {
+export class NewsFormContainerComponent
+  implements OnInit, OnDestroy, IDeactivateComponent
+{
+  @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
+
   id!: number;
   isEdit: boolean = false;
   routeSub!: Subscription;
@@ -17,12 +27,14 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
   constructor(
     private newsService: NewsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private confirmationModalService: ConfirmationModalService,
+    private newsPresenterService: NewsPresenterService
   ) {}
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params: Params) => {
       this.id = +params['id'];
-      this.isEdit = this.id ? true : false;
+      this.isEdit = !!this.id;
     });
 
     if (this.isEdit) {
@@ -60,8 +72,27 @@ export class NewsFormContainerComponent implements OnInit, OnDestroy {
     });
   }
 
+  canDeactivate(): Observable<boolean> | boolean {
+    const isFormUpdated = this.newsPresenterService.getIsUpdatedForm();
+
+    if (isFormUpdated) {
+      const modalData: ConfirmationModal = {
+        title: 'Confirmation Modal',
+        content: CommonConstant.DISCARD_CHANGES,
+      };
+      this.confirmationModalService.loadConfirmationComponent(
+        this.modalHost,
+        modalData
+      );
+
+      return this.confirmationModalService.onClickYes.asObservable();
+    }
+    return true;
+  }
+
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
     this.submitNewsSub.unsubscribe();
+    this.newsPresenterService.setIsUpdatedFrom();
   }
 }
