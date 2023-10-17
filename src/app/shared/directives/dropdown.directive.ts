@@ -8,8 +8,6 @@ export class DropdownDirective {
   private wasInside: boolean = false;
   @HostBinding('class.show') isShow: boolean = false;
 
-  constructor() {}
-
   /**
    * This Host listener listen the click event inside the dropdown
    */

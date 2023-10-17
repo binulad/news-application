@@ -1,11 +1,9 @@
 import {
+  AfterViewInit,
   Component,
-  ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { Modal } from '../../models/common.model';
 
@@ -14,20 +12,16 @@ import { Modal } from '../../models/common.model';
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent {
+export class ModalComponent implements AfterViewInit {
   @Input() modalData!: Modal;
   @Output() destroyModal: EventEmitter<boolean> = new EventEmitter();
 
-  @ViewChild('modalRef', { static: true }) modalRef!: ElementRef;
+  isShow: boolean = false;
 
-  /**
-   * This Host listener listen the event inside the Confirmation Modal dialog
-   * @param event Event inside the modalRef element
-   */
-  @HostListener('click', ['$event']) outSideClick(event: any) {
-    if (!this.modalRef.nativeElement.contains(event.target)) {
-      this.closedModal();
-    }
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.isShow = true;
+    }, 0);
   }
 
   /**

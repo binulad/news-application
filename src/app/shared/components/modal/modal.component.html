@@ -1,11 +1,18 @@
 <div class="modal-backdrop fade show"></div>
+
 <div
+  *ngIf="isShow"
   class="modal fade show d-block"
+  appEscClick
+  (onEscPressed)="closedModal()"
   tabindex="-1"
   role="dialog"
-  (keyup.esc)="closedModal()"
 >
-  <div class="modal-dialog modal-lg" #modalRef>
+  <div
+    class="modal-dialog modal-lg"
+    appOutsideClickListener
+    (outSideAction)="closedModal()"
+  >
     <div class="modal-content">
       <div class="modal-header" *ngIf="modalData.modalTitle">
         <h5 class="modal-title">
