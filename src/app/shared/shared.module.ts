@@ -6,6 +6,8 @@ import { ModalHostDirective } from './directives/modal-host.directive';
 import { FocusDirective } from './directives/focus.directive';
 import { TextTruncatePipe } from './pipes/text-truncate.pipe';
 import { DropdownDirective } from './directives/dropdown.directive';
+import { OutsideClickListenerDirective } from './directives/outside-click.directive';
+import { EscClickDirective } from './directives/esc-click.directive';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,8 @@ import { DropdownDirective } from './directives/dropdown.directive';
     FocusDirective,
     TextTruncatePipe,
     DropdownDirective,
+    OutsideClickListenerDirective,
+    EscClickDirective,
   ],
   imports: [CommonModule],
   exports: [
@@ -24,6 +28,7 @@ import { DropdownDirective } from './directives/dropdown.directive';
     FocusDirective,
     TextTruncatePipe,
     DropdownDirective,
+    EscClickDirective,
   ],
 })
 export class SharedModule {}

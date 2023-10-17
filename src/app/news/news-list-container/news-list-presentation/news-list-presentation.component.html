@@ -129,6 +129,7 @@
                   class="btn btn-link"
                   appDropdown
                   #sliderDropdown="dropdownDirective"
+                  (keyup.esc)="sliderDropdown.isShow = false"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -200,9 +201,10 @@
           <div class="flex-shrink-0 btn-group dropup">
             <button
               type="button"
+              class="btn btn-link"
               appDropdown
               #dropdown="dropdownDirective"
-              class="btn btn-link"
+              (keyup.esc)="dropdown.isShow = false"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
