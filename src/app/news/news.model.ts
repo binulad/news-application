@@ -63,12 +63,12 @@ export class QueryParams {
   q: string;
   sortBy: string;
   direction: string;
-  category: string | undefined | number;
+  category: string[] | undefined | number[];
   constructor(
     q: string,
     sortBy: string,
     direction: string,
-    category: string | undefined | number
+    category: string[] | undefined | number[]
   ) {
     this.q = q || '';
     this.sortBy = sortBy || 'createdOn';

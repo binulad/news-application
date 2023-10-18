@@ -7,3 +7,8 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.filter-dropdown {
+  max-height: 400px;
+  overflow: auto;
+}

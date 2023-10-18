@@ -1,33 +1,66 @@
 <!-- Action Area -->
 <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
   <!-- Categories -->
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center gap-2">
     <span class="fw-medium">Filter By Department/Wing:</span>
 
-    <div class="btn-group ms-2">
+    <div
+      class="btn-group"
+      appOutsideClickListener
+      #outsideClick="outsideClickDirective"
+    >
       <button
         type="button"
         class="btn btn-outline-primary btn-sm dropdown-toggle"
-        appDropdown
-        #filterDropdown="dropdownDirective"
       >
-        {{ selectedDepartment }}
+        {{ selectedDepartmentLabel }}
       </button>
-      <ul class="dropdown-menu" [class.show]="filterDropdown.isShow">
-        <li>
-          <a class="dropdown-item cursor-pointer" (click)="onClickCategory('')"
-            >All</a
-          >
+
+      <ul
+        class="dropdown-menu filter-dropdown pb-0"
+        [class.show]="outsideClick.isShow"
+        (keyup.esc)="outsideClick.isShow = false"
+      >
+        <li class="dropdown-item cursor-pointer">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="category"
+              id="allCategory"
+              #allSelected
+              (change)="checkedAll(allSelected.checked)"
+            />
+            <label class="form-check-label cursor-pointer" for="allCategory">
+              All
+            </label>
+          </div>
         </li>
-        <li *ngFor="let category of categoryList">
-          <a
-            class="dropdown-item cursor-pointer"
-            [class.disabled]="!category.isAvailable"
-            (click)="onClickCategory(category?.id)"
-            >{{ category?.name }}</a
-          >
+        <li class="dropdown-item" *ngFor="let category of categoryList">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="category"
+              [id]="category.id"
+              #checkboxes
+              (change)="onSelectCategory(category, checkboxes.checked)"
+            />
+            <label class="form-check-label cursor-pointer" [for]="category.id">
+              {{ category?.name }}
+            </label>
+          </div>
         </li>
       </ul>
+    </div>
+
+    <div class="filter-actions d-flex gap-2" *ngIf="selectedCategory.length">
+      <button type="button" class="btn btn-secondary" (click)="resetFilter()">
+        Reset
+      </button>
+      <button type="button" class="btn btn-primary" (click)="applyFilter()">
+        Apply
+      </button>
     </div>
   </div>
   <!-- End: Categories -->
@@ -71,6 +104,25 @@
   <!-- End: Search and Add New Button -->
 </div>
 <!-- End: Action Area -->
+
+<!-- Selected Categories -->
+<div *ngIf="selectedCategory.length">
+  <ul class="list-unstyled mb-2 d-flex flex-wrap gap-1">
+    <li
+      class="bg-primary-subtle border-primary px-2 py-1 rounded hstack gap-2"
+      *ngFor="let category of selectedCategory"
+    >
+      <small>{{ category.name }}</small>
+      <div class="vr"></div>
+      <a
+        type="button"
+        class="btn-close btn-remove-category"
+        (click)="removeCategory(category)"
+      ></a>
+    </li>
+  </ul>
+</div>
+<!-- End: Selected Categories -->
 
 <!-- News Card Listing -->
 <div class="grid gap-2" *ngIf="newsList.length">

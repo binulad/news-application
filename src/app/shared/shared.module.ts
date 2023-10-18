@@ -29,6 +29,7 @@ import { EscClickDirective } from './directives/esc-click.directive';
     TextTruncatePipe,
     DropdownDirective,
     EscClickDirective,
+    OutsideClickListenerDirective,
   ],
 })
 export class SharedModule {}
