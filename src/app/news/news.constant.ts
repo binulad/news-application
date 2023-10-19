@@ -23,4 +23,5 @@ export const Constants = {
     { id: 19, name: 'Women Wing' },
     { id: 20, name: 'Youth Wing' },
   ],
+  SELECT_DEPARTMENT_LABEL: 'Select Category(s)',
 };

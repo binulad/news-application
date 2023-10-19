@@ -13,7 +13,7 @@ export class NewsListContainerComponent implements OnInit, OnDestroy {
     q: '',
     sortBy: 'createdOn',
     direction: 'desc',
-    category: '',
+    category: [],
   };
   searchNewsSub!: Subscription;
   filterDepartmentSub!: Subscription;

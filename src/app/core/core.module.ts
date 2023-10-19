@@ -10,9 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth/auth.service';
+import { MultiselectComponent } from './components/multiselect/multiselect.component';
 
 @NgModule({
-  declarations: [HeaderComponent, LoaderComponent, LoginComponent],
+  declarations: [HeaderComponent, LoaderComponent, LoginComponent, MultiselectComponent],
   imports: [CommonModule, RouterModule, FormsModule, SharedModule],
   exports: [HeaderComponent, LoaderComponent],
   providers: [

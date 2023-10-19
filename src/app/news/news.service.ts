@@ -16,7 +16,7 @@ export class NewsService {
   public submitNews = new Subject<any>();
   public deletedNewsId = new Subject<number>();
   public searchData = new BehaviorSubject<string>('');
-  public filterDepartment = new Subject<string | number | undefined>();
+  public filterDepartment = new Subject<string[] | number[] | undefined>();
 
   constructor(private http: HttpClient) {}
 
@@ -30,12 +30,18 @@ export class NewsService {
     const sortBy = params.sortBy;
     const direction = params.direction;
     let filter = params.category;
-    if (filter) {
-      filter = `&departmentOrWing=${filter}`;
+    let filterData = '';
+
+    if (Array.isArray(filter)) {
+      const filterArr = filter.map((element) => {
+        return '&departmentOrWing=' + element;
+      });
+
+      filterData = filterArr.join('');
     }
     return this.http
       .get<News[]>(
-        `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}${filter}`
+        `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}${filterData}`
       )
       .pipe(
         map((response: any) => {
