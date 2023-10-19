@@ -8,8 +8,10 @@ import {
 
 @Directive({
   selector: '[appOutsideClickListener]',
+  exportAs: 'outsideClickDirective',
 })
 export class OutsideClickListenerDirective {
+  public isShow!: boolean;
   @Output() outSideAction: EventEmitter<Event> = new EventEmitter<Event>();
 
   constructor(private elementRef: ElementRef) {}
@@ -18,6 +20,9 @@ export class OutsideClickListenerDirective {
     const clickInside = this.elementRef.nativeElement.contains(event.target);
     if (!clickInside) {
       this.outSideAction.emit(event);
+      this.isShow = false;
+    } else {
+      this.isShow = true;
     }
   }
 }
