@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { News, QueryParams } from './news.model';
+import { Departments, News, QueryParams } from './news.model';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subject, map } from 'rxjs';
-import { Constants } from './news.constant';
 
 const API_URL = 'http://localhost:3000/news';
 
@@ -16,7 +15,9 @@ export class NewsService {
   public submitNews = new Subject<any>();
   public deletedNewsId = new Subject<number>();
   public searchData = new BehaviorSubject<string>('');
-  public filterDepartment = new Subject<string[] | number[] | undefined>();
+  public filterDepartment = new Subject<
+    string[] | Departments[] | number[] | undefined
+  >();
 
   constructor(private http: HttpClient) {}
 
@@ -39,42 +40,9 @@ export class NewsService {
 
       filterData = filterArr.join('');
     }
-    return this.http
-      .get<News[]>(
-        `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}${filterData}`
-      )
-      .pipe(
-        map((response: any) => {
-          response.forEach((element: any) => {
-            element.createdOn = this.getTimeSince(element.createdOn);
-          });
-          return response;
-        })
-      );
-  }
-
-  /**
-   * This method called to convert the Date to Since time.
-   * @param date Created Date of the news
-   * @returns The time since of that created news
-   */
-  getTimeSince(date: any) {
-    const now = new Date();
-    const timeStamp = new Date(date);
-    const secondAgo = Math.floor((+now - +timeStamp) / 1000);
-
-    if (secondAgo < 60) {
-      return `${secondAgo} sec ago`;
-    } else if (secondAgo < 3600) {
-      const minuteAgo = Math.floor(secondAgo / 60);
-      return `${minuteAgo} min ago`;
-    } else if (secondAgo < 86400) {
-      const hourAgo = Math.floor(secondAgo / 3600);
-      return `${hourAgo} hr ago`;
-    } else {
-      const daysAgo = Math.floor(secondAgo / 86400);
-      return `${daysAgo} day ago`;
-    }
+    return this.http.get<News[]>(
+      `${API_URL}?q=${search}&_sort=${sortBy}&_order=${direction}${filterData}`
+    );
   }
 
   /**
@@ -83,18 +51,7 @@ export class NewsService {
    * @returns News details of the id
    */
   getNewsById(id: number) {
-    return this.http.get<News>(`${API_URL}/${id}`).pipe(
-      map((response) => {
-        const getDepartment = Constants.DepartmentList.find(
-          (department) => department.id == +response.departmentOrWing
-        );
-        response.departmentOrWing = getDepartment?.name
-          ? getDepartment?.name
-          : '';
-
-        return response;
-      })
-    );
+    return this.http.get<News>(`${API_URL}/${id}`);
   }
 
   /**

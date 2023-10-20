@@ -11,9 +11,9 @@ export class News {
     public newsDescription: string,
     public guestDetails: ChiefGuests[],
     public centerDetails: CenterDetails,
-    public files?: UploadFiles[],
-    public createdOn?: string,
-    public updatedOn?: string
+    public files: UploadFiles[],
+    public createdOn: string,
+    public updatedOn: string
   ) {}
 }
 
@@ -63,7 +63,7 @@ export class QueryParams {
   q: string;
   sortBy: string;
   direction: string;
-  category: string[] | undefined | number[];
+  category: string[] | Departments[] | undefined | number[];
   constructor(
     q: string,
     sortBy: string,

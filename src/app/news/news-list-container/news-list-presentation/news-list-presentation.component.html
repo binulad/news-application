@@ -173,7 +173,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <p class="small mb-0 flex-grow-1">
                 {{ news.centerDetails.district }} -
-                {{ news.createdOn }}
+                {{ news.createdOn | getTimeSince }}
               </p>
               <div class="flex-shrink-0 btn-group dropup">
                 <button
@@ -235,7 +235,7 @@
   >
     <div
       class="card shadow-sm h-100"
-      [class.bg-primary-subtle]="!news.files?.length"
+      [class.bg-primary-subtle]="!news.files.length"
     >
       <img
         *ngIf="news.files?.length"
@@ -246,7 +246,8 @@
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
           <small class="text-muted"
-            >{{ news.centerDetails.district }} - {{ news.createdOn }}</small
+            >{{ news.centerDetails.district }} -
+            {{ news.createdOn | getTimeSince }}</small
           >
 
           <!-- Dropdown Directive -->

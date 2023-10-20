@@ -40,11 +40,14 @@ export class HeaderComponent implements OnInit {
    * This method called to log out the user
    */
   onClickLogout() {
-    this.auth.logout({
-      logoutParams: {
-        returnTo: this.document.location.origin,
-      },
-    });
-    this.authGuardService.clearSession();
+    this.auth
+      .logout({
+        logoutParams: {
+          returnTo: this.document.location.origin,
+        },
+      })
+      .subscribe(() => {
+        this.authGuardService.clearSession();
+      });
   }
 }

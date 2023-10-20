@@ -38,15 +38,15 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   @ViewChild('allSelected') allSelected!: ElementRef;
 
   public newsList: News[] = [];
-  newsListSub!: Subscription;
-  deletedNewsId?: number;
-  confirmationYesSub!: Subscription;
-  categoryList: Departments[] = Constants.DepartmentList;
-  selectedDepartmentLabel: any = Constants.SELECT_DEPARTMENT_LABEL;
+  public categoryList: Departments[] = Constants.DepartmentList;
+  public selectedDepartmentLabel: string = Constants.SELECT_DEPARTMENT_LABEL;
+  public selectedCategory: Departments[] = [];
+  public isSelectAll: boolean = false;
+  public isRemoveFromPills: boolean = false;
+  public deletedNewsId?: number;
 
-  selectedCategory: any = [];
-  isSelectAll: boolean = false;
-  isRemoveFromPills: boolean = false;
+  private newsListSub!: Subscription;
+  private confirmationYesSub!: Subscription;
 
   constructor(
     private newsService: NewsService,
@@ -72,16 +72,16 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    * @param category Passed the selected category
    * @param isChecked Passed the checked/unchecked value
    */
-  onSelectCategory(category: any, isChecked: boolean) {
+  onSelectCategory(category: Departments, isChecked: boolean) {
     if (isChecked) {
       this.selectedCategory.push(category);
 
       // Check if all the checkboxes are selected or not
       this.isSelectAllCheckboxes();
     } else {
-      const index = this.selectedCategory.findIndex((object: any) => {
-        return object.id == category.id;
-      });
+      const index = this.selectedCategory.findIndex(
+        (object) => object.id === category.id
+      );
       this.selectedCategory.splice(index, 1);
 
       // If remove the category from pills then it also removed from the multiselect dropdown
@@ -106,7 +106,7 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
     }
 
     this.selectedDepartmentLabel = this.selectedCategory.length
-      ? this.selectedCategory.length + ' Selected'
+      ? `${this.selectedCategory.length} Selected`
       : Constants.SELECT_DEPARTMENT_LABEL;
 
     // this.applyFilter();
@@ -116,7 +116,7 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    * This method called to remove the category from selected pills
    * @param category Pass the category that needs to be removed
    */
-  removeCategory(category: any) {
+  removeCategory(category: Departments) {
     this.isRemoveFromPills = true;
     this.onSelectCategory(category, false);
   }
@@ -185,7 +185,7 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
     this.isSelectAll = true;
 
     this.selectedDepartmentLabel = this.selectedCategory.length
-      ? this.selectedCategory.length + ' Selected'
+      ? `${this.selectedCategory.length} Selected`
       : Constants.SELECT_DEPARTMENT_LABEL;
   }
 
@@ -194,8 +194,8 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    */
   getAvailableDepartment() {
     this.newsList.forEach((news) => {
-      return this.categoryList.filter((department) => {
-        if (department.id == +news.departmentOrWing) {
+      this.categoryList.forEach((department) => {
+        if (department.id === +news.departmentOrWing) {
           department.isAvailable = true;
         }
       });

@@ -20,9 +20,11 @@ export class NewsFormContainerComponent
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
 
   id!: number;
-  isEdit: boolean = false;
-  routeSub!: Subscription;
-  submitNewsSub!: Subscription;
+  isEdit = false;
+  private routeSub!: Subscription;
+  private submitNewsSub!: Subscription;
+  private isFormUpdatedSub!: Subscription;
+  isFormUpdated = false;
 
   constructor(
     private newsService: NewsService,
@@ -50,6 +52,12 @@ export class NewsFormContainerComponent
         this.addNews(newsData);
       }
     });
+
+    this.isFormUpdatedSub = this.newsPresenterService.isFormUpdated$.subscribe(
+      (isUpdated) => {
+        this.isFormUpdated = isUpdated;
+      }
+    );
   }
 
   /**
@@ -73,9 +81,7 @@ export class NewsFormContainerComponent
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-    const isFormUpdated = this.newsPresenterService.getIsUpdatedForm();
-
-    if (isFormUpdated) {
+    if (this.isFormUpdated) {
       const modalData: ConfirmationModal = {
         title: 'Confirmation Modal',
         content: CommonConstant.DISCARD_CHANGES,
@@ -93,6 +99,6 @@ export class NewsFormContainerComponent
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
     this.submitNewsSub.unsubscribe();
-    this.newsPresenterService.setIsUpdatedFrom();
+    this.isFormUpdatedSub.unsubscribe();
   }
 }

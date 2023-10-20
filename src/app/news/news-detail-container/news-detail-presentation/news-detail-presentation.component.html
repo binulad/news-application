@@ -41,7 +41,9 @@
           </p>
           <p class="col-md-8 mb-0">
             Department(s)/Related Wing(s):
-            <span class="text-muted">{{ newsDetails.departmentOrWing }}</span>
+            <span class="text-muted">{{
+              newsDetails.departmentOrWing | departmentName
+            }}</span>
           </p>
           <p class="col-12 mb-0">
             Programme Anchor Name:

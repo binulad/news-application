@@ -34,7 +34,6 @@
                   formControlName="fromDate"
                   [class.is-invalid]="validateField('fromDate')"
                   bsDatepicker
-                  [minDate]="minFromDate"
                   [maxDate]="maxDate"
                   [bsConfig]="{
                     containerClass: 'theme-default',
@@ -361,6 +360,7 @@
             *ngFor="let file of selectedFiles; let i = index"
             [formGroupName]="i"
           >
+            {{ file.name }}
             <div class="position-relative">
               <ng-container *ngIf="file.fileName != 'Video'; else elseBlock">
                 <figure class="figure d-block m-0">

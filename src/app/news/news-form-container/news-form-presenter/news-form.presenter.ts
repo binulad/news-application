@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable()
 export class NewsPresenterService {
-  public newsFormUpdated$ = new Subject<UntypedFormGroup>();
+  public newsFormUpdated$ = new Subject<FormGroup>();
   public isFormUpdated$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private formBuilder: UntypedFormBuilder) {}
+  constructor(private formBuilder: FormBuilder) {}
 
   /**
-   * This method called to create a News FormGroup
-   * @returns News FromGroup
+   * This method creates a News FormGroup
+   * @returns News FormGroup
    */
-  createNewsForm(): UntypedFormGroup {
+  createNewsForm(): FormGroup {
     return this.formBuilder.group({
       subject: [null, [Validators.required]],
       fromDate: [null, [Validators.required]],
@@ -41,48 +37,51 @@ export class NewsPresenterService {
   }
 
   /**
-   * This method called to get the Form Group of Guest Array
-   * @param guestName Passed the guest name
-   * @param identification Passed the identification of the guest
-   * @param speechDescription Passed the speechDescription of the guest
-   * @returns Return a FormGroup
+   * This method creates a FormGroup for guest details
+   * @param guestName The guest name
+   * @param identification The identification of the guest
+   * @param speechDescription The speechDescription of the guest
+   * @returns A FormGroup
    */
   createGuestFormGroup(
-    guestName?: string,
-    identification?: string,
-    speechDescription?: string
-  ): UntypedFormGroup {
+    guestName = '',
+    identification = '',
+    speechDescription = ''
+  ): FormGroup {
     return this.formBuilder.group({
-      guestName: [guestName ?? null, Validators.required],
-      identification: [identification ?? null, Validators.required],
-      speechDescription: [speechDescription ?? null],
+      guestName: [guestName, Validators.required],
+      identification: [identification, Validators.required],
+      speechDescription: [speechDescription],
     });
   }
 
   /**
-   * This method called to create the FileGroup Array
-   * @param fileName Passed the file name
-   * @param fileURL Passed the file url
-   * @param fileDescription Passed the file description
-   * @returns Return a FormGroup
+   * This method creates a FormGroup for file details
+   * @param fileName The file name
+   * @param fileURL The file URL
+   * @param fileDescription The file description
+   * @returns A FormGroup
    */
   createFileGroup(
-    fileName?: string,
-    fileURL?: string | SafeResourceUrl,
-    fileDescription?: string
-  ): UntypedFormGroup {
+    fileName = '',
+    fileURL: string | SafeResourceUrl = '',
+    fileDescription = ''
+  ): FormGroup {
     return this.formBuilder.group({
-      fileName: [fileName ?? null],
-      fileURL: [fileURL ?? null],
-      fileDescription: [fileDescription ?? null],
+      fileName: [fileName],
+      fileURL: [fileURL],
+      fileDescription: [fileDescription],
     });
   }
-
-  setIsUpdatedFrom() {
-    this.isFormUpdated$.next(false);
-  }
-
-  getIsUpdatedForm() {
-    return this.isFormUpdated$.getValue();
-  }
+  // createFileGroup(
+  //   fileName?: string,
+  //   fileURL?: string | SafeResourceUrl,
+  //   fileDescription?: string
+  // ): FormGroup {
+  //   return this.formBuilder.group({
+  //     fileName: [fileName ?? null],
+  //     fileURL: [fileURL ?? null],
+  //     fileDescription: [fileDescription ?? null],
+  //   });
+  // }
 }
