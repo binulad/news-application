@@ -9,6 +9,11 @@ body {
 }
 
 .filter-dropdown {
+  &.show {
+    display: flex;
+  }
+
+  flex-direction: column;
   max-height: 400px;
-  overflow: auto;
+  overflow: hidden;
 }

@@ -21,8 +21,10 @@ export class OutsideClickListenerDirective {
     if (!clickInside) {
       this.outSideAction.emit(event);
       this.isShow = false;
-    } else {
-      this.isShow = true;
     }
+  }
+
+  toggleButton() {
+    this.isShow = !this.isShow;
   }
 }

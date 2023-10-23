@@ -82,6 +82,7 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
       const index = this.selectedCategory.findIndex(
         (object) => object.id === category.id
       );
+
       this.selectedCategory.splice(index, 1);
 
       // If remove the category from pills then it also removed from the multiselect dropdown
@@ -98,18 +99,8 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
         this.isSelectAll = false;
         this.allSelected.nativeElement.checked = false;
       }
-
-      // If all the selected categories removed then reset the Filter
-      if (!this.selectedCategory.length) {
-        this.resetFilter();
-      }
     }
-
-    this.selectedDepartmentLabel = this.selectedCategory.length
-      ? `${this.selectedCategory.length} Selected`
-      : Constants.SELECT_DEPARTMENT_LABEL;
-
-    // this.applyFilter();
+    this.applyFilter();
   }
 
   /**
@@ -148,6 +139,16 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
 
     // Passed the Array of category Ids
     this.newsService.filterDepartment.next(categoryIds);
+    this.updateButtonLabel();
+  }
+
+  /**
+   * This method is called to update the label of Button
+   */
+  updateButtonLabel() {
+    this.selectedDepartmentLabel = this.selectedCategory.length
+      ? `${this.selectedCategory.length} Selected`
+      : Constants.SELECT_DEPARTMENT_LABEL;
   }
 
   /**
@@ -161,9 +162,11 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
       element.nativeElement.checked = false;
     });
 
-    this.allSelected.nativeElement.checked = false;
-    this.newsService.filterDepartment.next(this.selectedCategory);
+    if (this.isSelectAll) {
+      this.allSelected.nativeElement.checked = false;
+    }
     this.selectedDepartmentLabel = Constants.SELECT_DEPARTMENT_LABEL;
+    this.newsService.filterDepartment.next(this.selectedCategory);
   }
 
   /**
@@ -183,10 +186,9 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
       element.nativeElement.checked = true;
     });
     this.isSelectAll = true;
+    this.applyFilter();
 
-    this.selectedDepartmentLabel = this.selectedCategory.length
-      ? `${this.selectedCategory.length} Selected`
-      : Constants.SELECT_DEPARTMENT_LABEL;
+    this.updateButtonLabel();
   }
 
   /**
