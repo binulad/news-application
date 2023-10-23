@@ -15,6 +15,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { SharedModule } from '../shared/shared.module';
 import { SafePipe } from '../common/pipes/safe.pipe';
 import { NewsPresenterService } from './news-form-container/news-form-presenter/news-form.presenter';
+import { DepartmentNamePipe } from './department-name.pipe';
+import { GetTimeSincePipe } from '../common/pipes/get-time-since.pipe';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { NewsPresenterService } from './news-form-container/news-form-presenter/
     NewsDetailContainerComponent,
     NewsDetailPresentationComponent,
     SafePipe,
+    DepartmentNamePipe,
+    GetTimeSincePipe,
   ],
   imports: [
     CommonModule,

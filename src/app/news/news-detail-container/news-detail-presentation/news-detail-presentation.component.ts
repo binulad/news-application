@@ -61,6 +61,8 @@ export class NewsDetailPresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.newsSub.unsubscribe();
+    if (this.newsSub) {
+      this.newsSub.unsubscribe();
+    }
   }
 }
