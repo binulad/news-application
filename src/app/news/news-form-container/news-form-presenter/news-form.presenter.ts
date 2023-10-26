@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable()
 export class NewsPresenterService {
-  public newsFormUpdated$ = new Subject<FormGroup>();
-  public isFormUpdated$ = new BehaviorSubject<boolean>(false);
-
   constructor(private formBuilder: FormBuilder) {}
 
   /**

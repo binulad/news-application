@@ -172,7 +172,8 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     newsData.value['updatedOn'] = this.isEdit ? new Date() : null;
 
     this.newsService.submitNews.next(newsData.value);
-    this.newsFormService.isFormUpdated$.next(false);
+    // Mark all FormGroup control as pristine
+    this.newsForm.markAsPristine();
   }
 
   /**
@@ -193,7 +194,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     // Use Promise.all to wait for all conversions to complete
     Promise.all(promises)
       .then((results: any) => {
-        // All files have been converted, you can now push them to the FormArray
+        // Mutate the uploadedFiles signal value
         this.uploadedFiles.mutate((value) => value.push(...files));
         this.uploadFileInput.nativeElement.value = '';
       })
@@ -251,6 +252,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
     );
     this.files.push(videoGroup);
 
+    // Mutate the uploadedFiles signal value
     this.uploadedFiles.mutate((value) => value.push(videoGroup.value));
     this.uploadVideoLink.nativeElement.value = '';
   }
