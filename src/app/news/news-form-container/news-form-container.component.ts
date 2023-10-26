@@ -7,8 +7,8 @@ import { ConfirmationModal } from 'src/app/shared/models/common.model';
 import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
 import { IDeactivateComponent } from 'src/app/common/models/common.model';
-import { NewsPresenterService } from './news-form-presenter/news-form.presenter';
 import { CommonConstant } from 'src/app/common/constants/common.constant';
+import { NewsFormPresentationComponent } from './news-form-presentation/news-form-presentation.component';
 
 @Component({
   selector: 'app-news-form-container',
@@ -18,20 +18,19 @@ export class NewsFormContainerComponent
   implements OnInit, OnDestroy, IDeactivateComponent
 {
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
+  @ViewChild(NewsFormPresentationComponent)
+  newsFormPresentation!: NewsFormPresentationComponent;
 
   id!: number;
   isEdit = false;
   private routeSub!: Subscription;
   private submitNewsSub!: Subscription;
-  private isFormUpdatedSub!: Subscription;
-  isFormUpdated = false;
 
   constructor(
     private newsService: NewsService,
     private route: ActivatedRoute,
     private router: Router,
-    private confirmationModalService: ConfirmationModalService,
-    private newsPresenterService: NewsPresenterService
+    private confirmationModalService: ConfirmationModalService
   ) {}
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params: Params) => {
@@ -52,12 +51,6 @@ export class NewsFormContainerComponent
         this.addNews(newsData);
       }
     });
-
-    this.isFormUpdatedSub = this.newsPresenterService.isFormUpdated$.subscribe(
-      (isUpdated) => {
-        this.isFormUpdated = isUpdated;
-      }
-    );
   }
 
   /**
@@ -81,7 +74,8 @@ export class NewsFormContainerComponent
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-    if (this.isFormUpdated) {
+    const isNewsFormUpdated = this.newsFormPresentation.newsForm.dirty;
+    if (isNewsFormUpdated) {
       const modalData: ConfirmationModal = {
         title: 'Confirmation Modal',
         content: CommonConstant.DISCARD_CHANGES,
@@ -99,6 +93,5 @@ export class NewsFormContainerComponent
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
     this.submitNewsSub.unsubscribe();
-    this.isFormUpdatedSub.unsubscribe();
   }
 }

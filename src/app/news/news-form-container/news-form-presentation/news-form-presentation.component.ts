@@ -1,23 +1,26 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild,
+  signal,
 } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Constants } from '../../news.constant';
-import { Departments, News } from '../../news.model';
+import { Departments, News, UploadFiles } from '../../news.model';
 import { NewsService } from '../../news.service';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
 import { NewsPresenterService } from '../news-form-presenter/news-form.presenter';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-news-form-presentation',
   templateUrl: './news-form-presentation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsFormPresentationComponent implements OnInit {
+export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   @ViewChild('uploadFile') uploadFileInput: any;
   @ViewChild('videoLink') uploadVideoLink: any;
 
@@ -27,11 +30,13 @@ export class NewsFormPresentationComponent implements OnInit {
   maxDate: Date = new Date();
   minToDate!: Date;
   DepartmentAndWingList: Departments[] = Constants.DepartmentList;
-  selectedFiles: any[] = [];
   id!: number;
   isEdit: boolean = false;
   editNewsForm!: any;
   initialValue!: News;
+  uploadedFiles = signal<any[] | UploadFiles[]>([]);
+
+  private getNewsSub!: Subscription;
 
   constructor(
     private newsService: NewsService,
@@ -67,23 +72,13 @@ export class NewsFormPresentationComponent implements OnInit {
   setFormValue() {
     this.newsForm = this.newsFormService.createNewsForm();
     if (this.isEdit) {
-      this.newsService.getNews.subscribe((response) => {
+      this.getNewsSub = this.newsService.getNews.subscribe((response) => {
         this.editNewsForm = response;
         this.patchNewsFormValues();
-        this.getGuestDetails();
-        this.getAllFiles();
-        this.initialValue = this.newsForm.value;
       });
+    } else {
+      this.initialValue = this.newsForm.value;
     }
-
-    // Check if the values are change or not
-    this.newsForm.valueChanges.subscribe((updatedValue: any) => {
-      const isValueUpdated =
-        JSON.stringify(this.initialValue) !== JSON.stringify(updatedValue);
-      this.newsFormService.isFormUpdated$.next(
-        this.newsForm.dirty && isValueUpdated
-      );
-    });
   }
 
   /**
@@ -97,6 +92,10 @@ export class NewsFormPresentationComponent implements OnInit {
       ),
       toDate: new Date(this.editNewsForm.toDate ?? this.editNewsForm.toDate),
     });
+    this.getGuestDetails();
+    this.getAllFiles();
+
+    this.initialValue = this.newsForm.value;
   }
 
   /**
@@ -130,7 +129,7 @@ export class NewsFormPresentationComponent implements OnInit {
           )
         );
       }
-      this.selectedFiles = [...this.editNewsForm.files];
+      this.uploadedFiles.set([...this.editNewsForm.files]);
     }
   }
 
@@ -179,7 +178,7 @@ export class NewsFormPresentationComponent implements OnInit {
   /**
    * This method called while upload any files
    * @param event Passed the event
-   * @returns Return if the no file selected otherwise add the selected files into the 'selectedFiles' array
+   * @returns Return if the no file selected otherwise add the selected files into the 'uploadedFiles' signal
    */
   onFileChange(event: any) {
     const files = event.target.files;
@@ -191,20 +190,18 @@ export class NewsFormPresentationComponent implements OnInit {
     // Create an array of promises for each file conversion
     const promises = [...files].map((file) => this.toBase64(file));
 
-    console.log('promises::', this.newsForm.get('files'));
-
     // Use Promise.all to wait for all conversions to complete
     Promise.all(promises)
-      .then((results) => {
+      .then((results: any) => {
         // All files have been converted, you can now push them to the FormArray
-        this.selectedFiles.push(...files);
+        this.uploadedFiles.mutate((value) => value.push(...files));
         this.uploadFileInput.nativeElement.value = '';
-
-        console.log('selectedFiles', this.selectedFiles);
       })
       .catch((error) => {
         console.error('Error converting files:', error);
       });
+
+    this.newsForm.markAsDirty();
   }
 
   /**
@@ -218,9 +215,9 @@ export class NewsFormPresentationComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         file.fileURL = reader.result;
+        file.fileName = file.name;
         // Assuming 'files' is a FormArray in your 'newsForm'
-        const filesFormArray = this.newsForm.get('files') as FormArray;
-        filesFormArray.push(
+        this.files.push(
           this.newsFormService.createFileGroup(file.name, file.fileURL, '')
         );
 
@@ -233,12 +230,12 @@ export class NewsFormPresentationComponent implements OnInit {
   }
 
   /**
-   * This method called to remove the file from 'selectedFiles' Array
+   * This method called to remove the file from 'uploadedFiles' signal
    * @param index Passed the file index
    */
   removeFile(index: number) {
     this.files.removeAt(index);
-    this.selectedFiles.splice(index, 1);
+    this.uploadedFiles().splice(index, 1);
   }
 
   /**
@@ -254,7 +251,13 @@ export class NewsFormPresentationComponent implements OnInit {
     );
     this.files.push(videoGroup);
 
-    this.selectedFiles.push(videoGroup.value);
+    this.uploadedFiles.mutate((value) => value.push(videoGroup.value));
     this.uploadVideoLink.nativeElement.value = '';
+  }
+
+  ngOnDestroy(): void {
+    if (this.isEdit) {
+      this.getNewsSub.unsubscribe();
+    }
   }
 }

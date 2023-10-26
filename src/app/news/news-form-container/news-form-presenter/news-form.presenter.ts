@@ -16,21 +16,21 @@ export class NewsPresenterService {
    */
   createNewsForm(): FormGroup {
     return this.formBuilder.group({
-      subject: [null, [Validators.required]],
-      fromDate: [null, [Validators.required]],
-      toDate: [null, [Validators.required]],
+      subject: ['', [Validators.required]],
+      fromDate: ['', [Validators.required]],
+      toDate: ['', [Validators.required]],
       days: [null, [Validators.required]],
       noOfPeople: [null, [Validators.required]],
-      anchorName: [null, [Validators.required]],
+      anchorName: ['', [Validators.required]],
       departmentOrWing: [null],
-      newsDescription: [null, [Validators.required]],
+      newsDescription: ['', [Validators.required]],
       guestDetails: this.formBuilder.array([]),
       centerDetails: this.formBuilder.group({
-        centreName: [null, [Validators.required]],
-        centreIncharge: [null, [Validators.required]],
-        zoneName: [null, [Validators.required]],
-        district: [null, [Validators.required]],
-        areaName: [null, [Validators.required]],
+        centreName: ['', [Validators.required]],
+        centreIncharge: ['', [Validators.required]],
+        zoneName: ['', [Validators.required]],
+        district: ['', [Validators.required]],
+        areaName: ['', [Validators.required]],
       }),
       files: this.formBuilder.array([]),
     });
@@ -73,15 +73,4 @@ export class NewsPresenterService {
       fileDescription: [fileDescription],
     });
   }
-  // createFileGroup(
-  //   fileName?: string,
-  //   fileURL?: string | SafeResourceUrl,
-  //   fileDescription?: string
-  // ): FormGroup {
-  //   return this.formBuilder.group({
-  //     fileName: [fileName ?? null],
-  //     fileURL: [fileURL ?? null],
-  //     fileDescription: [fileDescription ?? null],
-  //   });
-  // }
 }
