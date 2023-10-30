@@ -1,0 +1,33 @@
+<div class="btn-group position-relative d-inline-block" [ngClass]="direction">
+  <button
+    type="button"
+    class="btn"
+    [ngClass]="btnClass || 'btn-primary'"
+    appDropdown
+    #dropdown="dropdownDirective"
+    (keyup.esc)="dropdown.isShow = false"
+  >
+    <ng-container
+      *ngTemplateOutlet="dropdownToggle || defaultDropdownToggle"
+    ></ng-container>
+  </button>
+  <div
+    *ngIf="dropdown.isShow"
+    class="dropdown-menu"
+    [ngClass]="{ show: dropdown.isShow, 'dropdown-menu-end': menuAtEnd }"
+    @openClose
+  >
+    <ng-container
+      *ngTemplateOutlet="dropdownMenu || defaultDropdownMenu"
+    ></ng-container>
+  </div>
+
+  <ng-template #defaultDropdownToggle> Dropdown </ng-template>
+  <ng-template #defaultDropdownMenu>
+    <ul class="m-0 p-0 list-unstyled">
+      <li>
+        <a class="dropdown-item">Dropdown Menu</a>
+      </li>
+    </ul>
+  </ng-template>
+</div>

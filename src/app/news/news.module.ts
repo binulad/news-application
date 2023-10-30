@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NewsFormContainerComponent } from './news-form-container/news-form-container.component';
@@ -17,6 +16,7 @@ import { SafePipe } from '../common/pipes/safe.pipe';
 import { NewsPresenterService } from './news-form-container/news-form-presenter/news-form.presenter';
 import { DepartmentNamePipe } from './department-name.pipe';
 import { GetTimeSincePipe } from '../common/pipes/get-time-since.pipe';
+import { DropdownComponent } from '../common/components/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -30,16 +30,14 @@ import { GetTimeSincePipe } from '../common/pipes/get-time-since.pipe';
     SafePipe,
     DepartmentNamePipe,
     GetTimeSincePipe,
+    DropdownComponent,
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     NewsRoutingModule,
-    ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     CarouselModule.forRoot(),
     ModalModule.forRoot(),
-    SharedModule,
-    FormsModule,
   ],
   providers: [NewsPresenterService],
 })

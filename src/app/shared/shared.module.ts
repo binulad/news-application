@@ -8,6 +8,7 @@ import { TextTruncatePipe } from './pipes/text-truncate.pipe';
 import { DropdownDirective } from './directives/dropdown.directive';
 import { OutsideClickListenerDirective } from './directives/outside-click.directive';
 import { EscClickDirective } from './directives/esc-click.directive';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,8 +21,11 @@ import { EscClickDirective } from './directives/esc-click.directive';
     OutsideClickListenerDirective,
     EscClickDirective,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   exports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
     ConfirmationModalComponent,
     ModalComponent,
     ModalHostDirective,

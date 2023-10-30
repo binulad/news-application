@@ -237,6 +237,7 @@ export class NewsFormPresentationComponent implements OnInit, OnDestroy {
   removeFile(index: number) {
     this.files.removeAt(index);
     this.uploadedFiles().splice(index, 1);
+    this.newsForm.markAsDirty();
   }
 
   /**

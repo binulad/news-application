@@ -72,25 +72,6 @@
             </div>
           </li>
         </ul>
-        <!-- <div
-          class="filter-actions flex-shrink-0 border-top p-2 justify-content-between d-flex gap-2"
-        >
-          <button
-            type="button"
-            class="btn btn-secondary"
-            [disabled]="!isFilterApply"
-            (click)="[resetFilter(), (outsideClick.isShow = false)]"
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="[applyFilter(), (outsideClick.isShow = false)]"
-          >
-            Apply
-          </button>
-        </div> -->
       </div>
     </div>
   </div>
@@ -206,14 +187,15 @@
                 {{ news.centerDetails.district }} -
                 {{ news.createdOn | getTimeSince }}
               </p>
-              <div class="flex-shrink-0 btn-group dropup">
-                <button
-                  type="button"
-                  class="btn btn-link"
-                  appDropdown
-                  #sliderDropdown="dropdownDirective"
-                  (keyup.esc)="sliderDropdown.isShow = false"
-                >
+
+              <!-- Common Dropdown -->
+              <app-dropdown
+                class="flex-shrink-0"
+                btnClass="btn-link"
+                direction="dropup"
+                [menuAtEnd]="true"
+              >
+                <ng-template #dropdownToggle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -226,28 +208,26 @@
                       d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
                     />
                   </svg>
-                </button>
-                <ul
-                  *ngIf="sliderDropdown.isShow"
-                  class="dropdown-menu dropdown-menu-end show"
-                  [class.show]="sliderDropdown.isShow"
-                  @openClose
-                >
-                  <li>
-                    <a class="dropdown-item" [routerLink]="['edit', news.id]"
-                      >Edit</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      type="button"
-                      (click)="onDelete(news.id)"
-                      class="dropdown-item"
-                      >Delete</a
-                    >
-                  </li>
-                </ul>
-              </div>
+                </ng-template>
+                <ng-template #dropdownMenu>
+                  <ul class="m-0 p-0 list-unstyled">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['edit', news.id]"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        type="button"
+                        (click)="onDelete(news.id)"
+                        class="dropdown-item"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </ng-template>
+              </app-dropdown>
+              <!-- End: Common Dropdown -->
             </div>
             <a
               [routerLink]="['/news', news.id]"
@@ -281,15 +261,13 @@
             {{ news.createdOn | getTimeSince }}</small
           >
 
-          <!-- Dropdown Directive -->
-          <div class="flex-shrink-0 btn-group dropup">
-            <button
-              type="button"
-              class="btn btn-link"
-              appDropdown
-              #dropdown="dropdownDirective"
-              (keyup.esc)="dropdown.isShow = false"
-            >
+          <!-- Common Dropdown -->
+          <app-dropdown
+            class="flex-shrink-0"
+            btnClass="btn-link"
+            [menuAtEnd]="true"
+          >
+            <ng-template #dropdownToggle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -302,28 +280,26 @@
                   d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
                 />
               </svg>
-            </button>
-            <ul
-              *ngIf="dropdown.isShow"
-              class="dropdown-menu dropdown-menu-end"
-              [class.show]="dropdown.isShow"
-              @openClose
-            >
-              <li>
-                <a class="dropdown-item" [routerLink]="['edit', news.id]"
-                  >Edit</a
-                >
-              </li>
-              <li>
-                <a
-                  type="button"
-                  (click)="onDelete(news.id)"
-                  class="dropdown-item"
-                  >Delete</a
-                >
-              </li>
-            </ul>
-          </div>
+            </ng-template>
+            <ng-template #dropdownMenu>
+              <ul class="m-0 p-0 list-unstyled">
+                <li>
+                  <a class="dropdown-item" [routerLink]="['edit', news.id]"
+                    >Edit</a
+                  >
+                </li>
+                <li>
+                  <a
+                    type="button"
+                    (click)="onDelete(news.id)"
+                    class="dropdown-item"
+                    >Delete</a
+                  >
+                </li>
+              </ul>
+            </ng-template>
+          </app-dropdown>
+          <!-- End: Common Dropdown -->
         </div>
         <a
           [routerLink]="['/news', news.id]"

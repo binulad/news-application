@@ -11,7 +11,6 @@ import { Departments, News } from '../../news.model';
 import { NewsService } from '../../news.service';
 import { Subscription } from 'rxjs';
 import { Constants } from '../../news.constant';
-import { animate, style, transition, trigger } from '@angular/animations';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
 import { ConfirmationModal } from 'src/app/shared/models/common.model';
 import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
@@ -19,17 +18,6 @@ import { ConfirmationModalService } from 'src/app/shared/components/confirmation
 @Component({
   selector: 'app-news-list-presentation',
   templateUrl: './news-list-presentation.component.html',
-  animations: [
-    trigger('openClose', [
-      transition(':enter', [
-        style({ transform: 'translateY(10%)' }),
-        animate(100),
-      ]),
-      transition(':leave', [
-        animate(100, style({ transform: 'translateY(10%)' })),
-      ]),
-    ]),
-  ],
 })
 export class NewsListPresentationComponent implements OnInit, OnDestroy {
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
