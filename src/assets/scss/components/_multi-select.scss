@@ -1,0 +1,39 @@
+.multiselect {
+  &-wrapper {
+    position: relative;
+  }
+
+  &-input {
+    border: 0;
+    padding: 0;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &-option {
+    display: none;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: $white;
+    z-index: 1;
+
+    &.show {
+      display: block;
+    }
+
+    .form-check {
+      $start-padding: $form-check-padding-start + 0.5em;
+      position: relative;
+      padding: 1px $start-padding;
+      margin-bottom: 0;
+
+      &:hover {
+        background-color: $gray-200;
+      }
+    }
+  }
+}

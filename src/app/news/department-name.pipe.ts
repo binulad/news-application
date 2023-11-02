@@ -5,10 +5,14 @@ import { Constants } from './news.constant';
   name: 'departmentName',
 })
 export class DepartmentNamePipe implements PipeTransform {
-  transform(value: string): string {
-    const getDepartment = Constants.DepartmentList.find(
-      (department) => department.id == +value
-    );
-    return getDepartment?.name ? getDepartment?.name : '';
+  transform(value: any): string {
+    if (!value) {
+      return '-';
+    }
+    const getDepartment = Constants.DepartmentList.filter((department) => {
+      return value.includes(department.id);
+    }).map((option) => option.name);
+
+    return getDepartment.join(', ');
   }
 }
