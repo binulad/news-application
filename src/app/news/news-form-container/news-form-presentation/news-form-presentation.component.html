@@ -108,19 +108,13 @@
                 <label for="departmentOrWing" class="form-label"
                   >Department(s)/Related Wing(s)</label
                 >
-                <select
-                  class="form-select"
-                  aria-label="Department(s)/Related Wing(s)"
+                <app-multi-select
+                  [data]="DepartmentAndWingList"
+                  bindLabel="name"
+                  bindValue="id"
+                  [isShowTag]="true"
                   formControlName="departmentOrWing"
-                >
-                  <option value="" selected>Select the Department</option>
-                  <option
-                    *ngFor="let department of DepartmentAndWingList"
-                    [value]="department.id"
-                  >
-                    {{ department.name }}
-                  </option>
-                </select>
+                ></app-multi-select>
               </div>
               <!-- End: No. of people and Anchor Name and Related Wing(s) -->
             </div>

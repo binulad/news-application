@@ -1,0 +1,92 @@
+<div
+  class="multiselect-wrapper"
+  appOutsideClickListener
+  #outsideClick="outsideClickDirective"
+>
+  <div
+    class="form-select d-flex align-items-center"
+    (click)="outsideClick.toggleButton()"
+  >
+    <span
+      class="bg-secondary-subtle border rounded px-2 me-2 fw-medium"
+      *ngIf="this.selectedOption.length"
+      >{{ this.selectedOption.length + " item selected" }}</span
+    >
+    <input
+      type="text"
+      class="flex-grow-1 multiselect-input"
+      #searchText
+      [placeholder]="
+        this.selectedOption.length ? 'Search...' : 'Select the option'
+      "
+      (keyup)="[(outsideClick.isShow = true), onSearch(searchText.value)]"
+    />
+    <a
+      class="flex-shrink-0 ms-2 text-decoration-none"
+      type="button"
+      *ngIf="this.selectedOption.length"
+      (click)="resetSelection()"
+      >&#10006;</a
+    >
+  </div>
+
+  <div
+    class="multiselect-option border rounded"
+    [class.show]="outsideClick.isShow"
+  >
+    <ng-container *ngIf="optionList.length; else noRecordsBlock">
+      <!-- Select All Option -->
+      <div class="form-check" (click)="toggleOption(selectAllOption)">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [checked]="selectAllOption.selected"
+        />
+        <span class="form-check-label small cursor-pointer stretched-link">
+          {{ selectAllOption.label }}
+        </span>
+      </div>
+      <!-- Select All Option -->
+
+      <!-- Options List -->
+      <div
+        class="form-check"
+        *ngFor="let option of optionList"
+        (click)="toggleOption(option)"
+      >
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [checked]="option.selected"
+        />
+        <span class="form-check-label small cursor-pointer stretched-link">
+          {{ option[label] }}
+        </span>
+      </div>
+      <!-- End: Options List -->
+    </ng-container>
+
+    <ng-template #noRecordsBlock>
+      <p class="mb-0 px-2 py-1 small text-muted">No record available</p>
+    </ng-template>
+  </div>
+</div>
+<!-- Selected Categories -->
+<div *ngIf="isShowTag && selectedOption.length">
+  <ul class="list-unstyled mb-0 mt-2 d-flex flex-wrap gap-1">
+    <li
+      class="bg-primary-subtle border-primary px-2 py-1 rounded hstack gap-2"
+      *ngFor="let option of selectedOption"
+    >
+      <small>{{ option[label] }}</small>
+      <div class="vr"></div>
+      <a
+        type="button"
+        class="text-decoration-none small"
+        (click)="toggleOption(option)"
+        >&#10006;</a
+      >
+    </li>
+  </ul>
+</div>
+<!-- End: Selected Categories -->
