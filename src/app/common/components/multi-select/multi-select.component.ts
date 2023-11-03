@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+  forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -7,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: MultiSelectComponent,
+      useExisting: forwardRef(() => MultiSelectComponent),
       multi: true,
     },
   ],
@@ -16,6 +23,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
   @Input('data') options!: any[];
   @Input('bindLabel') label!: string;
   @Input('bindValue') bindValue!: string;
+  @Input('isShowTag') isShowTag: boolean = false;
 
   @ViewChild('searchText') searchText!: ElementRef;
 
@@ -26,6 +34,8 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
     label: 'Select All',
     selected: false,
   };
+  public isSearchText: boolean = false;
+  public selectFromSearch: any[] = [];
 
   onChange!: (value: any) => void;
   onTouch!: () => void;
@@ -33,9 +43,6 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
   ngOnInit(): void {
     // Create a shallow copy of options
     this.optionList = [...this.options];
-    this.optionList.forEach((option) => {
-      option['selected'] = false;
-    });
   }
 
   writeValue(obj: any): void {
@@ -44,6 +51,8 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
       this.optionList.forEach((option) => {
         if (obj.includes(option.id)) {
           option.selected = true;
+        } else {
+          option.selected = false;
         }
       });
     }
@@ -70,6 +79,48 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   /**
+   * This method called to update the selectedOption value
+   * @param option select/unselect option
+   */
+  updateSelectedOption(option: any) {
+    if (this.isSearchText) {
+      if (option.id !== 0) {
+        this.selectedOption.forEach((opt) => {
+          if (opt.id == option.id) {
+            option.selected = false;
+          }
+        });
+      }
+      this.selectedOption = this.selectedOption.filter(
+        (option) => option.selected
+      );
+
+      const selectedOptionList = this.optionList.filter(
+        (option) => option.selected
+      );
+      const selectedValue = new Set([
+        ...this.selectedOption,
+        ...selectedOptionList,
+      ]);
+
+      this.selectedOption = [...selectedValue];
+    } else {
+      this.selectedOption = this.optionList.filter((option) => option.selected);
+    }
+  }
+
+  /**
+   * This method called to emit the selectedOption data
+   */
+  emitSelectedOption() {
+    // Passed the selected option ids to the form
+    const options = this.selectedOption.map((option) => option.id);
+
+    this.onChange(options);
+    this.onTouch();
+  }
+
+  /**
    * This method called to select/unselect the option from the list
    * @param option: selected/unselected option
    */
@@ -88,12 +139,8 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
       this.isAllSelected();
     }
 
-    this.selectedOption = this.optionList.filter((option) => option.selected);
-    // Passed the selected option ids to the form
-    const options = this.selectedOption.map((option) => option.id);
-
-    this.onChange(options);
-    this.onTouch();
+    this.updateSelectedOption(option);
+    this.emitSelectedOption();
   }
 
   /**
@@ -102,10 +149,8 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
   resetSelection() {
     this.selectAllOption.selected = false;
 
-    this.optionList = this.options.map((option) => ({
-      ...option,
-      selected: false,
-    }));
+    this.options.forEach((option) => (option['selected'] = false));
+    this.optionList = [...this.options];
 
     this.searchText.nativeElement.value = '';
     this.selectedOption = [];
@@ -119,11 +164,13 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor {
    */
   onSearch(search: string) {
     const searchStr = search.toLowerCase();
+    this.isSearchText = !!searchStr;
 
     const searchResult = this.options.filter((option) =>
       option[this.label].toLowerCase().includes(searchStr)
     );
 
     this.optionList = [...searchResult];
+    this.isAllSelected();
   }
 }
