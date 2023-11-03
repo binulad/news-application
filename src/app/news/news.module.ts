@@ -17,6 +17,7 @@ import { NewsPresenterService } from './news-form-container/news-form-presenter/
 import { DepartmentNamePipe } from './department-name.pipe';
 import { GetTimeSincePipe } from '../common/pipes/get-time-since.pipe';
 import { DropdownComponent } from '../common/components/dropdown/dropdown.component';
+import { MultiSelectComponent } from '../common/components/multi-select/multi-select.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { DropdownComponent } from '../common/components/dropdown/dropdown.compon
     DepartmentNamePipe,
     GetTimeSincePipe,
     DropdownComponent,
+    MultiSelectComponent,
   ],
   imports: [
     SharedModule,

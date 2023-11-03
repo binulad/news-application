@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Departments, News } from '../../news.model';
 import { NewsService } from '../../news.service';
 import { Subscription } from 'rxjs';
@@ -14,6 +6,7 @@ import { Constants } from '../../news.constant';
 import { ModalHostDirective } from 'src/app/shared/directives/modal-host.directive';
 import { ConfirmationModal } from 'src/app/shared/models/common.model';
 import { ConfirmationModalService } from 'src/app/shared/components/confirmation-modal/confirmation-modal.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-news-list-presentation',
@@ -22,15 +15,11 @@ import { ConfirmationModalService } from 'src/app/shared/components/confirmation
 export class NewsListPresentationComponent implements OnInit, OnDestroy {
   @ViewChild(ModalHostDirective) modalHost!: ModalHostDirective;
 
-  @ViewChildren('checkboxes') checkboxes!: QueryList<ElementRef>;
-  @ViewChild('allSelected') allSelected!: ElementRef;
+  @ViewChild('categoryForm') categoryForm!: NgForm;
 
   public newsList: News[] = [];
   public categoryList: Departments[] = Constants.DepartmentList;
-  public selectedDepartmentLabel: string = Constants.SELECT_DEPARTMENT_LABEL;
-  public selectedCategory: Departments[] = [];
-  public isSelectAll: boolean = false;
-  public isRemoveFromPills: boolean = false;
+  public selectedCategory: any[] = [];
   public deletedNewsId?: number;
 
   private newsListSub!: Subscription;
@@ -44,7 +33,6 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.newsListSub = this.newsService.newsList.subscribe((response) => {
       this.newsList = response;
-      this.getAvailableDepartment();
     });
 
     this.confirmationYesSub =
@@ -56,139 +44,16 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This method called while select any category from multiselect dropdown
-   * @param category Passed the selected category
-   * @param isChecked Passed the checked/unchecked value
-   */
-  onSelectCategory(category: Departments, isChecked: boolean) {
-    if (isChecked) {
-      this.selectedCategory.push(category);
-
-      // Check if all the checkboxes are selected or not
-      this.isSelectAllCheckboxes();
-    } else {
-      const index = this.selectedCategory.findIndex(
-        (object) => object.id === category.id
-      );
-
-      this.selectedCategory.splice(index, 1);
-
-      // If remove the category from pills then it also removed from the multiselect dropdown
-      if (this.isRemoveFromPills) {
-        this.checkboxes.forEach((checkbox) => {
-          if (checkbox.nativeElement.id == category.id) {
-            checkbox.nativeElement.checked = false;
-          }
-        });
-      }
-
-      // If "All" checkbox is checked and remove all the categories then "All" checkbox also needs to unchecked
-      if (this.isSelectAll) {
-        this.isSelectAll = false;
-        this.allSelected.nativeElement.checked = false;
-      }
-    }
-    this.applyFilter();
-  }
-
-  /**
    * This method called to remove the category from selected pills
    * @param category Pass the category that needs to be removed
    */
-  removeCategory(category: Departments) {
-    this.isRemoveFromPills = true;
-    this.onSelectCategory(category, false);
-  }
-
-  /**
-   * This method called to check if all the categories are checked/unchecked
-   */
-  isSelectAllCheckboxes() {
-    const isAllChecked = this.checkboxes.some(
-      (element) => element.nativeElement.checked === false
+  removeCategory(categoryId: number) {
+    this.selectedCategory = this.selectedCategory.filter(
+      (id: any) => id != categoryId
     );
 
-    if (isAllChecked) {
-      this.isSelectAll = false;
-      return;
-    }
-    this.isSelectAll = true;
-    this.allSelected.nativeElement.checked = true;
-  }
-
-  /**
-   * This method called while click on Apply button
-   */
-  applyFilter() {
-    console.log(this.selectedCategory);
-    const categoryIds = this.selectedCategory.map((element: any) => {
-      return element.id;
-    });
-
-    // Passed the Array of category Ids
-    this.newsService.filterDepartment.next(categoryIds);
-    this.updateButtonLabel();
-  }
-
-  /**
-   * This method is called to update the label of Button
-   */
-  updateButtonLabel() {
-    this.selectedDepartmentLabel = this.selectedCategory.length
-      ? `${this.selectedCategory.length} Selected`
-      : Constants.SELECT_DEPARTMENT_LABEL;
-  }
-
-  /**
-   * This method called to reset the filter
-   */
-  resetFilter() {
-    this.selectedCategory = [];
-    console.log(this.checkboxes);
-
-    this.checkboxes.forEach((element) => {
-      element.nativeElement.checked = false;
-    });
-
-    if (this.isSelectAll) {
-      this.allSelected.nativeElement.checked = false;
-    }
-    this.selectedDepartmentLabel = Constants.SELECT_DEPARTMENT_LABEL;
-    this.newsService.filterDepartment.next(this.selectedCategory);
-  }
-
-  /**
-   * This method called while option "All" is checked/unchecked from the multiselect dropdown
-   * @param isAllSelected Pass if the option is checked/unchecked
-   * @returns If unchecked the option then reset the filter and return
-   */
-  checkedAll(isAllSelected: boolean) {
-    if (!isAllSelected) {
-      this.resetFilter();
-      return;
-    }
-
-    this.selectedCategory = [...this.categoryList];
-
-    this.checkboxes.forEach((element) => {
-      element.nativeElement.checked = true;
-    });
-    this.isSelectAll = true;
-    this.applyFilter();
-
-    this.updateButtonLabel();
-  }
-
-  /**
-   * This method called to filter the Available Departments from the List
-   */
-  getAvailableDepartment() {
-    this.newsList.forEach((news) => {
-      this.categoryList.forEach((department) => {
-        if (department.id === +news.departmentOrWing) {
-          department.isAvailable = true;
-        }
-      });
+    this.categoryForm.form.patchValue({
+      category: this.selectedCategory,
     });
   }
 
@@ -228,6 +93,15 @@ export class NewsListPresentationComponent implements OnInit, OnDestroy {
    */
   onSearch(searchText: string) {
     this.newsService.searchData.next(searchText);
+  }
+
+  /**
+   * This method called while change the category from filter
+   * @param categoryIds selected categoryIds
+   */
+  onChangeCategory(categoryIds: number[]) {
+    this.selectedCategory = categoryIds;
+    this.newsService.filterDepartment.next(categoryIds);
   }
 
   ngOnDestroy(): void {

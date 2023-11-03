@@ -4,75 +4,18 @@
   <div class="d-flex align-items-center gap-2">
     <span class="fw-medium">Filter By Department/Wing:</span>
 
-    <div
-      class="btn-group"
-      appOutsideClickListener
-      #outsideClick="outsideClickDirective"
-      (keyup.esc)="[outsideClick.isShow && (outsideClick.isShow = false)]"
-    >
-      <button
-        type="button"
-        class="btn btn-outline-primary btn-sm dropdown-toggle"
-        (click)="outsideClick.toggleButton()"
-      >
-        {{ selectedDepartmentLabel }}
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-link ls-0"
-        *ngIf="selectedCategory.length"
-        (click)="resetFilter()"
-      >
-        Clear Filter
-      </button>
-
-      <div
-        class="filter-dropdown dropdown-menu p-0"
-        [class.show]="outsideClick.isShow"
-      >
-        <ul class="overflow-auto flex-grow-1 m-0 p-0">
-          <li class="dropdown-item position-relative">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="category"
-                id="allCategory"
-                #allSelected
-                (change)="checkedAll(allSelected.checked)"
-              />
-              <label
-                class="form-check-label cursor-pointer stretched-link"
-                for="allCategory"
-              >
-                All
-              </label>
-            </div>
-          </li>
-          <li
-            class="dropdown-item position-relative"
-            *ngFor="let category of categoryList"
-          >
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="category"
-                [id]="category.id"
-                #checkboxes
-                (change)="onSelectCategory(category, checkboxes.checked)"
-              />
-              <label
-                class="form-check-label cursor-pointer stretched-link"
-                [for]="category.id"
-              >
-                {{ category?.name }}
-              </label>
-            </div>
-          </li>
-        </ul>
-      </div>
+    <div class="flex-grow-1 filter-dropdown">
+      <form #categoryForm="ngForm">
+        <app-multi-select
+          [data]="categoryList"
+          bindLabel="name"
+          bindValue="id"
+          name="category"
+          #category="ngModel"
+          ngModel
+          (ngModelChange)="onChangeCategory($event)"
+        ></app-multi-select>
+      </form>
     </div>
   </div>
   <!-- End: Categories -->
@@ -118,19 +61,20 @@
 <!-- End: Action Area -->
 
 <!-- Selected Categories -->
-<div *ngIf="selectedCategory.length">
+<div *ngIf="category.value">
   <ul class="list-unstyled mb-2 d-flex flex-wrap gap-1">
     <li
       class="bg-primary-subtle border-primary px-2 py-1 rounded hstack gap-2"
-      *ngFor="let category of selectedCategory"
+      *ngFor="let category of category.value"
     >
-      <small>{{ category.name }}</small>
+      <small>{{ category | departmentName : true }}</small>
       <div class="vr"></div>
       <a
         type="button"
-        class="btn-close btn-remove-category"
+        class="text-decoration-none small"
         (click)="removeCategory(category)"
-      ></a>
+        >&#10006;</a
+      >
     </li>
   </ul>
 </div>

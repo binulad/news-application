@@ -7,7 +7,7 @@ export class News {
     public days: number,
     public noOfPeople: number,
     public anchorName: string,
-    public departmentOrWing: string,
+    public departmentOrWing: number[],
     public newsDescription: string,
     public guestDetails: ChiefGuests[],
     public centerDetails: CenterDetails,
@@ -24,7 +24,7 @@ export interface AddNews {
   days: number;
   noOfPeople: number;
   anchorName: string;
-  departmentOrWing: string;
+  departmentOrWing: number[];
   newsDescription: string;
   guestDetails: ChiefGuests[];
   centerDetails: CenterDetails;
@@ -56,7 +56,6 @@ export interface UploadFiles {
 export interface Departments {
   id: number;
   name: string;
-  isAvailable?: boolean;
 }
 
 export class QueryParams {
